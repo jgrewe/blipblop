@@ -7,26 +7,28 @@ from blipblop.ui.resultsscreen import ResultsScreen
 
 class CentralWidget(QWidget):
     
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent=None):
         super().__init__(parent=parent)
         
-        self._splash = StartScreen()
+        self._start_screen = StartScreen()
         self._visual_screen = VisualBlip(self)
-        self._visual_screen.close_signal.connect(self.on_plot_close)
+        # self._visual_screen.close_signal.connect(self.on_plot_close)
 
         self._auditory_screen = AudioBlop(self)
-        self._auditory_screen.close_signal.connect(self.on_plot_close)
+        #self._auditory_screen.close_signal.connect(self.on_plot_close)
         
-        self._results_screen = AudioBlop(self)
-        self._results_screen.close_signal.connect(self.on_plot_close)
+        self._results_screen = ResultsScreen(self)
+        #self._results_screen.close_signal.connect(self.on_plot_close)
         
         self._stack = QStackedLayout(self)
-        self._stack.addWidget(self._splash)
+        self._stack.addWidget(self._start_screen)
         self._stack.addWidget(self._visual_screen)
         self._stack.addWidget(self._auditory_screen)
         self._stack.addWidget(self._results_screen)
 
         self.setLayout(self._stack)
+        self._task_results = []
+        self._stack.setCurrentIndex(0)
 
     def show_file_content(self):
         self._stack.setCurrentIndex(1)
@@ -40,6 +42,5 @@ class CentralWidget(QWidget):
         self._stack.setCurrentIndex(1)
 
     def reset(self):
-        self._visual_stims_screen.reset()
-        self._splash.reset()
+        self._task_results = []
         self._stack.setCurrentIndex(0)

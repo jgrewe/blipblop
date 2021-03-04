@@ -6,6 +6,7 @@ from PyQt5.QtCore import QSize, QSettings, Qt
 import blipblop.constants as cnst
 from blipblop.ui.help import HelpDialog
 from blipblop.ui.about import AboutDialog
+from blipblop.ui.centralwidget import CentralWidget
 
 
 class BlipBlop(QMainWindow):
@@ -19,7 +20,8 @@ class BlipBlop(QMainWindow):
         self.setMenuBar(QMenuBar(self))
         self.create_actions()
         self._task_results = []
-
+        self._cw = CentralWidget()
+        self.setCentralWidget(self._cw)
         self.show()
     
     def create_actions(self):
@@ -119,9 +121,8 @@ class BlipBlop(QMainWindow):
         sys.exit()
 
     def on_new(self):
-        self._task_results = []
-        self.__
-        pass
+        self._cw.reset()
+        
 
     def on_about(self):
         about = AboutDialog(self)

@@ -37,7 +37,6 @@ class StartScreen(QWidget):
         l.addWidget(QLabel("Recently opened files:"))
         self._file_list = QListWidget(self)
         self._file_list.setSelectionMode(QAbstractItemView.SingleSelection)
-        self._file_list.itemClicked.connect(self._on_file_clicked)
         self._file_list.setFrameShape(QFrame.NoFrame)
         self.keyPressed.connect(self._on_key_pressed)
         l.addWidget(self._file_list)
