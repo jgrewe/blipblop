@@ -1,0 +1,20 @@
+{
+  "NAME": "BlibBlop",
+  "VERSION": "0.1",
+  "DESCRIPTION": "Measure reaction times to visual or auditory signals",
+  "AUTHOR": "Jan Grewe",
+  "COPYRIGHT": "(c) 2021, Neuroethology lab, Uni Tuebingen",
+  "CONTACT": "jan.grewe@g-node.org",
+  "HOMEPAGE": "https://github.com/bendalab/nixview-python",
+  "CLASSIFIERS": [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Scientific/Engineering",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: BSD License"
+  ]
+}
