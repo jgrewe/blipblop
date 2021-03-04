@@ -26,11 +26,11 @@ class BlipBlop(QMainWindow):
     
     def create_actions(self):
         self._quit_action = QAction(cnst.get_icon("nixview_quit"), "Quit", self)
-        self._quit_action.setStatusTip("Close current file and quit")
+        self._quit_action.setStatusTip("Quit BlipBlop")
         self._quit_action.setShortcut(QKeySequence("Ctrl+q"))
         self._quit_action.triggered.connect(self.on_quit)
 
-        self._new_action = QAction(cnst.get_icon("nixview_quit"), "New session", self)
+        self._new_action = QAction(cnst.get_icon("new_task"), "New session", self)
         self._new_action.setStatusTip("Start a new session discarding previous results")
         self._new_action.setShortcut(QKeySequence("Ctrl+n"))
         self._new_action.triggered.connect(self.on_new)
@@ -43,11 +43,11 @@ class BlipBlop(QMainWindow):
         self._plot_action.triggered.connect(self.on_item_plot)
         """
 
-        self._results_action = QAction(cnst.get_icon("nix_data_frame"), "Show table", self)
-        self._results_action.setStatusTip("Show data as table")
+        self._results_action = QAction(cnst.get_icon("nix_data_frame"), "Show results", self)
+        self._results_action.setStatusTip("Show results as table")
         self._results_action.setShortcut(QKeySequence("Ctrl+t"))
-        self._results_action.setEnabled(False)
-        # self._table_action.triggered.connect(self.on_file_close)
+        self._results_action.setEnabled(True)
+        #self._table_action.triggered.connect(self.on_file_close)
 
         self._about_action = QAction("about")
         self._about_action.setStatusTip("Show about dialog")
@@ -60,11 +60,11 @@ class BlipBlop(QMainWindow):
         self._help_action.setEnabled(True)
         self._help_action.triggered.connect(self.on_help)
 
-        self._visual_task_action = QAction("visual")
+        self._visual_task_action = QAction(cnst.get_icon("visual_task"), "visual")
         self._visual_task_action.setStatusTip("Start measuring visual reaction times")
-        self._visual_task_action.setEnabled(False)
+        self._visual_task_action.setEnabled(True)
 
-        self._auditory_task_action = QAction("auditory")
+        self._auditory_task_action = QAction(cnst.get_icon("auditory_task"), "auditory")
         self._auditory_task_action.setStatusTip("Start measuring auditory reaction times")
         self._auditory_task_action.setEnabled(False)
 
@@ -132,3 +132,6 @@ class BlipBlop(QMainWindow):
     def on_help(self, e):
         help = HelpDialog(self)
         help.show()
+        
+    def on_visual(self):
+        pass# cw.
