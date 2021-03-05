@@ -31,6 +31,7 @@ install_req = ["PyQt5", "numpy"]
 
 data_files = [("icons", glob.glob(os.path.join("icons", "*.png"))),
               ("icons", glob.glob(os.path.join("icons", "*.ic*"))),
+              ("sounds", glob.glob(os.path.join("sounds", "*.wav"))),
               (".", ["LICENSE"]),
               ("docs", glob.glob(os.path.join("docs", "*.md")))
               ]
