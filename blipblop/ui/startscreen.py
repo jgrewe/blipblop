@@ -21,11 +21,11 @@ class StartScreen(QWidget):
         super().__init__(parent=parent)
 
         layout = QGridLayout()
-        layout.setColumnStretch(0, 2)
+        layout.setColumnStretch(0, 1)
         layout.setColumnStretch(6, 1)
        
         layout.setRowStretch(0, 1)
-        layout.setRowStretch(4, 2)
+        layout.setRowStretch(3, 1)
         self.setLayout(layout)
         
         label = QLabel("Measure your reaction times!\nselect a task")
