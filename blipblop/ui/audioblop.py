@@ -9,13 +9,11 @@ class AudioBlop(QWidget):
         super().__init__(parent=parent)
         
         vbox = QVBoxLayout()
-        self.setLayout(vbox)
-        
-        main_splitter = QSplitter(Qt.Vertical)
-        self.layout().addWidget(main_splitter)
-        
-       
-        
+      
+        l = QLabel("Auditory task")
+        vbox.addWidget(l)
+
+
 
     def reset(self):
         pass

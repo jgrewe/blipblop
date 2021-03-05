@@ -11,6 +11,9 @@ class CentralWidget(QWidget):
         super().__init__(parent=parent)
         
         self._start_screen = StartScreen()
+        self._start_screen.visual_task_signal.connect(self.on_new_visual_task)
+        self._start_screen.auditory_task_signal.connect(self.on_new_auditory_task)
+
         self._visual_screen = VisualBlip(self)
         # self._visual_screen.close_signal.connect(self.on_plot_close)
 
@@ -21,10 +24,10 @@ class CentralWidget(QWidget):
         #self._results_screen.close_signal.connect(self.on_plot_close)
         
         self._stack = QStackedLayout(self)
-        self._stack.addWidget(self._start_screen)
-        self._stack.addWidget(self._visual_screen)
-        self._stack.addWidget(self._auditory_screen)
-        self._stack.addWidget(self._results_screen)
+        self._stack.addWidget(self._start_screen)     # 0
+        self._stack.addWidget(self._visual_screen)    # 1
+        self._stack.addWidget(self._auditory_screen)  # 2
+        self._stack.addWidget(self._results_screen)   # 3
 
         self.setLayout(self._stack)
         self._task_results = []
@@ -44,3 +47,9 @@ class CentralWidget(QWidget):
     def reset(self):
         self._task_results = []
         self._stack.setCurrentIndex(0)
+        
+    def on_new_visual_task(self):
+        self._stack.setCurrentIndex(1)
+    
+    def on_new_auditory_task(self):
+        self._stack.setCurrentIndex(2)
