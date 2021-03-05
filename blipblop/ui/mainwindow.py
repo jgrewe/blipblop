@@ -35,19 +35,11 @@ class BlipBlop(QMainWindow):
         self._new_action.setShortcut(QKeySequence("Ctrl+n"))
         self._new_action.triggered.connect(self.on_new)
 
-        """
-        self._plot_action = QAction(cnst.get_icon("nix_data_array"), "Plot", self)
-        self._plot_action.setStatusTip("Plot currently selected entity")
-        self._plot_action.setShortcut(QKeySequence("Ctrl+p"))
-        self._plot_action.setEnabled(False)
-        self._plot_action.triggered.connect(self.on_item_plot)
-        """
-
         self._results_action = QAction(cnst.get_icon("nix_data_frame"), "Show results", self)
         self._results_action.setStatusTip("Show results as table")
         self._results_action.setShortcut(QKeySequence("Ctrl+t"))
         self._results_action.setEnabled(True)
-        #self._table_action.triggered.connect(self.on_file_close)
+        #self._results_action.triggered.connect(self.on_results)
 
         self._about_action = QAction("about")
         self._about_action.setStatusTip("Show about dialog")
@@ -62,23 +54,24 @@ class BlipBlop(QMainWindow):
 
         self._visual_task_action = QAction(cnst.get_icon("visual_task"), "visual")
         self._visual_task_action.setStatusTip("Start measuring visual reaction times")
+        self._visual_task_action.setShortcut(QKeySequence("Ctrl+1"))
         self._visual_task_action.setEnabled(True)
+        self._visual_task_action.triggered.connect(self.on_visual)
 
         self._auditory_task_action = QAction(cnst.get_icon("auditory_task"), "auditory")
         self._auditory_task_action.setStatusTip("Start measuring auditory reaction times")
-        self._auditory_task_action.setEnabled(False)
+        self._auditory_task_action.setShortcut(QKeySequence("Ctrl+2"))
+        self._auditory_task_action.setEnabled(False) 
+        self._auditory_task_action.triggered.connect(self.on_auditory)
 
         self.create_toolbar()
         self.create_menu() 
 
     def create_toolbar(self):
         self._toolbar = QToolBar("My main toolbar")
-        #self._toolbar.setStyleSheet("QToolButton:!hover {background-color:none}")
         self._toolbar.setAllowedAreas(Qt.LeftToolBarArea | Qt.TopToolBarArea)
         self._toolbar.setIconSize(QSize(32, 32))
 
-        # self._toolbar.addAction(self._file_open_action)
-        #self._toolbar.addAction(self._file_close_action)
         self._toolbar.addAction(self._new_action)
 
         self._toolbar.addSeparator()
@@ -98,9 +91,6 @@ class BlipBlop(QMainWindow):
     def create_menu(self):
         menu = self.menuBar()
         file_menu = menu.addMenu("&File")
-        # file_menu.addAction(self._file_open_action)
-        # file_menu.addAction(self._file_close_action)
-        # file_menu.addSeparator()
         file_menu.addAction(self._quit_action)
         
         task_menu = menu.addMenu("&Tasks")
@@ -108,10 +98,7 @@ class BlipBlop(QMainWindow):
         task_menu.addSeparator()
         task_menu.addAction(self._visual_task_action)
         task_menu.addAction(self._auditory_task_action)
-        #plot_menu = menu.addMenu("&Plot")
-        #plot_menu.addAction(self._plot_action)
-        #plot_menu.addAction(self._table_action)
-        
+       
         help_menu = menu.addMenu("&Help")
         help_menu.addAction(self._about_action)
         help_menu.addAction(self._help_action)
@@ -122,16 +109,20 @@ class BlipBlop(QMainWindow):
 
     def on_new(self):
         self._cw.reset()
-        
 
     def on_about(self):
         about = AboutDialog(self)
         about.show()
-        pass
 
     def on_help(self, e):
         help = HelpDialog(self)
         help.show()
         
     def on_visual(self):
-        pass# cw.
+        self._cw.on_new_visual_task()
+
+    def on_auditory(self):
+        self._cw.on_new_auditory_task()
+
+    def on_results(self):
+            self._cw.on_show_results()
