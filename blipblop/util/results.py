@@ -12,12 +12,20 @@ class MeasurementResults():
         self._reaction_times.append(reaction_time)
 
     @property
+    def results(self, reaction_times):
+        self._reaction_times = reaction_times
+    
+    @property
     def name(self):
         return self._task_name
 
     @property
     def starttime(self):
-        return str(self._task_timestamp)
+        return self._task_timestamp
+    
+    @property
+    def starttime(self, starttime):
+        self._task_timestamp = starttime
 
     @property
     def results(self):

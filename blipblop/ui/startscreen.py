@@ -25,7 +25,7 @@ class StartScreen(QWidget):
         layout.setColumnStretch(6, 1)
        
         layout.setRowStretch(0, 1)
-        layout.setRowStretch(3, 1)
+        layout.setRowStretch(4, 1)
         self.setLayout(layout)
         
         label = QLabel("Measure your reaction times!\nselect a task")
@@ -36,13 +36,13 @@ class StartScreen(QWidget):
         layout.addWidget(label, 1, 2, 1, 3, Qt.AlignCenter)
         
         visual_task_label = MyLabel()
-        visual_task_label.setToolTip("Click to start a new visual task")
+        visual_task_label.setToolTip("Click to start a new visual task (Ctrl+1)")
         visual_task_label.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "visual_task_large.png")))
         visual_task_label.setMaximumWidth(256)
         visual_task_label.clicked.connect(self.new_visual_task)
         
         auditory_task_label = MyLabel()
-        auditory_task_label.setToolTip("Click to start a new auditory task")
+        auditory_task_label.setToolTip("Click to start a new auditory task (Ctrl+2)")
         auditory_task_label.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "auditory_task_large.png")))
         auditory_task_label.setMaximumWidth(256)
         auditory_task_label.clicked.connect(self.new_auditory_task)
