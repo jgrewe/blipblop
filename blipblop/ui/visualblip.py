@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QAction, QComboBox, QFrame, QGroupBox, QGridLayout, QLabel, QPushButton, QShortcut, QSizePolicy, QSplitter, QTextEdit, QVBoxLayout, QWidget
-from PyQt5.QtCore import QItemSelectionModel, QLine, QPoint, Qt
+from PyQt5.QtCore import QItemSelectionModel, QLine, QPoint, QTimer, Qt
 from PyQt5.QtGui import QColor, QKeySequence, QPainter, QBrush, QPen, QPixmap
 
-import blipblop.constants as cnst
+import numpy as np
+
 
 class SettingsPanel(QWidget):
     def __init__(self, parent=None):
@@ -33,7 +34,7 @@ class VisualBlip(QWidget):
     def create_actions(self):
         self._start_action = QAction("start trial")
         self._start_action.setShortcuts([QKeySequence("enter"), QKeySequence("return")])
-        self._start_action.triggered.connect(self.paint_event)
+        self._start_action.triggered.connect(self.on_trial_start)
         self._reaction = QAction("reaction")
         self._reaction.setShortcut(QKeySequence("space"))
         self._reaction.triggered.connect(self.on_reaction)
@@ -69,15 +70,22 @@ class VisualBlip(QWidget):
         self._canvas_center = QPoint(200, 200)
         self._draw_area.setPixmap(self._canvas)
 
-    def paint_event(self):
+    def blip(self):
         painter = QPainter(self._draw_area.pixmap())    
         painter.setPen(QPen(Qt.red,  1, Qt.SolidLine))
-        painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
-        
+        painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))      
         painter.drawEllipse(self._canvas_center, 100, 100)
         painter.end()
         self._draw_area.update()
-         
+    
+    def on_trial_start(self):
+        interval = np.random.randint(10, 50, 1) * 100
+        timer = QTimer(self)
+        timer.setSingleShot(True)
+        timer.setInterval(int(interval))
+        timer.timeout.connect(self.blip)
+        timer.start()
+
     def reset(self):
         pass
 
