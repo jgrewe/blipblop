@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QAction, QFormLayout, QGridLayout, QLabel, QLineEdit, QSizePolicy, QSlider, QSpinBox, QTextEdit, QWidget
-from PyQt5.QtCore import QPoint, QTimer, Qt, pyqtSignal, QSettings
+from PyQt5.QtCore import QIODevice, QPoint, QTimer, Qt, pyqtSignal, QSettings, QUrl
 from PyQt5.QtGui import QColor, QFont, QKeySequence, QPainter, QBrush, QPen, QPixmap
-from PyQt5.QtMultimedia import QSound
+from PyQt5.QtMultimedia import QSound, QMediaPlayer, QMediaContent, QAudio, QAudioDeviceInfo
 
 import os
 import blipblop.constants as cnst
@@ -181,10 +181,20 @@ class AudioBlop(QWidget):
         self._draw_area.setPixmap(self._canvas)
 
     def blip(self):
-        bells = cnst.get_sound("message")
-        bells.setLoops(10)
+        player = QMediaPlayer()
+        url = QUrl.fromLocalFile("/home/grewe/projects/programming/blipblop/sounds/message.wav")
+        print(url)
+        content = QMediaContent(url)
+        print(content)
+        player.setMedia(content)
+        #player.setMedia( QUrl.fromLocalFile("/home/grewe/projects/programming/blipblop/sounds/message.wav"));
+        player.setVolume(100)
+        player.play()
+        # print(QAudioDeviceInfo.availableDevices(QAudio.AudioOutput))
+        #bells = cnst.get_sound("message")
+        #bells.setLoops(10)
         #QSound("mysounds/bells.wav");
-        bells.play();
+        #bells.play();
         stim_size = self._settings.size
         painter = QPainter(self._draw_area.pixmap())    
         painter.setPen(QPen(Qt.red,  1, Qt.SolidLine))
