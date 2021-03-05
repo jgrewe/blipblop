@@ -1,50 +1,159 @@
-from PyQt5.QtWidgets import QAction, QComboBox, QFrame, QGroupBox, QGridLayout, QLabel, QPushButton, QShortcut, QSizePolicy, QSplitter, QTextEdit, QVBoxLayout, QWidget
-from PyQt5.QtCore import QItemSelectionModel, QLine, QPoint, QTimer, Qt
-from PyQt5.QtGui import QColor, QKeySequence, QPainter, QBrush, QPen, QPixmap
+from PyQt5.QtWidgets import QAction, QFormLayout, QGridLayout, QLabel, QLineEdit, QSizePolicy, QSlider, QSpinBox, QTextEdit, QWidget
+from PyQt5.QtCore import QPoint, QTimer, Qt, pyqtSignal, QSettings
+from PyQt5.QtGui import QColor, QFont, QKeySequence, QPainter, QBrush, QPen, QPixmap
 
+import os
+import blipblop.constants as cnst
 import numpy as np
-
+import datetime as dt
 
 class SettingsPanel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+
+        self._trial_spinner = QSpinBox()
+        self._trial_spinner.setMinimum(5)
+        self._trial_spinner.setMaximum(25)
+        self._trial_spinner.setValue(10)
+
+        self._min_delay_edit = QLineEdit()
+        self._min_delay_edit.setText(str("1000"))
+        self._min_delay_edit.setToolTip("Minimum delay between start of trial and stimulus display")
+        self._min_delay_edit.setEnabled(False)
         
+        self._max_delay_edit = QLineEdit()
+        self._max_delay_edit.setText(str("5000"))
+        self._max_delay_edit.setToolTip("Maximum delay between start of trial and stimulus display")
+        self._max_delay_edit.setEnabled(False)
+        
+        self._saliency_slider = QSlider(Qt.Horizontal)
+        self._saliency_slider.setMinimum(0)
+        self._saliency_slider.setMaximum(100)
+        self._saliency_slider.setSliderPosition(100)
+        self._saliency_slider.setTickInterval(25)
+        self._saliency_slider.setTickPosition(QSlider.TicksBelow)
+        self._saliency_slider.setToolTip("Saliency of the stimulus, i.e. its opacity")
+
+        self._size_slider = QSlider(Qt.Horizontal)
+        self._size_slider.setMinimum(0)
+        self._size_slider.setMaximum(200)
+        self._size_slider.setSliderPosition(100)
+        self._size_slider.setTickInterval(25)
+        self._size_slider.setTickPosition(QSlider.TicksBelow)
+        self._size_slider.setToolTip("Diameter of the stimulus in pixel")
+
+        self._instructions = QTextEdit()
+        self._instructions.setMarkdown("* fixate central cross\n * press start (enter) when ready\n * press space bar as soon as the stimulus occurs")
+        self._instructions.setMinimumHeight(200)
+        self._instructions.setReadOnly(True)
+
+        form_layout = QFormLayout()
+        form_layout.addRow("Settings", None)
+        form_layout.addRow("number of trials", self._trial_spinner)
+        form_layout.addRow("minimum delay [ms]", self._min_delay_edit)
+        form_layout.addRow("maximum delay [ms]", self._max_delay_edit)
+        form_layout.addRow("stimulus saliency", self._saliency_slider)
+        form_layout.addRow("stimulus size", self._size_slider)
+        form_layout.addRow("instructions", self._instructions)
+        self.setLayout(form_layout)
+
+    @property
+    def trials(self):
+        return self._trial_spinner.value()
+    
+    @property
+    def saliency(self):
+        return self._saliency_slider.sliderPosition()
+    
+    @property
+    def size(self):
+        return self._size_slider.sliderPosition()
+    
+    @property
+    def min_delay(self):
+        return int(self._min_delay_edit.text())
+    
+    @property
+    def max_delay(self):
+        return int(self._max_delay_edit.text())
+    
+    def set_enabled(self, enabled):
+        self._trial_spinner.setEnabled(enabled)
+        self._saliency_slider.setEnabled(enabled)
+
 
 class VisualBlip(QWidget):
+    task_done = pyqtSignal()
+    task_aborted = pyqtSignal()
+
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
         
         grid = QGridLayout()
         grid.setColumnStretch(0, 1)
-        grid.setColumnStretch(2, 1)
+        grid.setColumnStretch(3, 1)
         grid.setRowStretch(1, 1)
         grid.setRowStretch(3, 1)
         self.setLayout(grid)
 
-        l = QLabel("Visual task")
+        l = QLabel("Visual reaction test")
+        l.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "visual_task.png")))
         grid.addWidget(l, 0, 0, Qt.AlignLeft)
-        instruction_label = QLabel("Instructions:\n -fixate central cross\n -press start (enter) when ready\n -press space bar as soon as the stimulus occurs")
-        grid.addWidget(instruction_label, 3, 1, Qt.AlignLeft)
+
+        self._status_label = QLabel("Ready to start, press enter ...")
+        QFont
+        grid.addWidget(self._status_label, 3, 4, Qt.AlignBaseline)
+
         self._draw_area = QLabel()
         self._draw_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         grid.addWidget(self._draw_area, 2, 1)
+        
+        self._settings = SettingsPanel()
+        grid.addWidget(self._settings, 2, 4)
+
         self.reset_canvas()
         self.create_actions()
+
+        self._start_time = None
+        self._response_time = None
+        self._reaction_times = []
+        self._trial_counter = 0
+        self._session_running = False
+        self._trial_running = False
+
+        self.setFocus()
     
     def create_actions(self):
         self._start_action = QAction("start trial")
         self._start_action.setShortcuts([QKeySequence("enter"), QKeySequence("return")])
         self._start_action.triggered.connect(self.on_trial_start)
+        
         self._reaction = QAction("reaction")
         self._reaction.setShortcut(QKeySequence("space"))
         self._reaction.triggered.connect(self.on_reaction)
+
+        self._abort = QAction("abort")
+        self._abort.setShortcut(QKeySequence("escape"))
+        self._abort.triggered.connect(self.on_abort)
         
         self.addAction(self._start_action)
         self.addAction(self._reaction)
+        self.addAction(self._abort)
 
     def on_reaction(self):
-        print("reaction")
+        if not self._session_running or not self._trial_running:
+            return
+        
+        self._response_time = dt.datetime.now()
+        if self._trial_counter < self._settings.trials:
+            self._status_label.setText("Trial %i of %i, press enter for next trial" % (self._trial_counter, self._settings.trials))
+        if self._start_time is None:
+            self._reaction_times.append(-1000)
+        else:
+            reaction_time = self._response_time - self._start_time
+            self._reaction_times.append(reaction_time.total_seconds())
         self.reset_canvas()
+        self._trial_running = False
 
     def reset_canvas(self):
         bkg_color = QColor()
@@ -62,7 +171,7 @@ class VisualBlip(QWidget):
         top = QPoint(200, 175)
         bottom = QPoint(200, 225)
         painter = QPainter(pixmap)    
-        painter.setPen(QPen(Qt.red,  1, Qt.SolidLine))
+        painter.setPen(QPen(Qt.red, 2, Qt.SolidLine))
         painter.drawLine(left, right)
         painter.drawLine(top, bottom)
         painter.end()
@@ -71,21 +180,55 @@ class VisualBlip(QWidget):
         self._draw_area.setPixmap(self._canvas)
 
     def blip(self):
+        stim_size = self._settings.size
         painter = QPainter(self._draw_area.pixmap())    
         painter.setPen(QPen(Qt.red,  1, Qt.SolidLine))
-        painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))      
-        painter.drawEllipse(self._canvas_center, 100, 100)
+        color = QColor(Qt.red)
+        color.setAlphaF(self._settings.saliency/100)
+        painter.setBrush(QBrush(color, Qt.SolidPattern))      
+        painter.drawEllipse(self._canvas_center, stim_size, stim_size)
         painter.end()
+        self._start_time = dt.datetime.now()
         self._draw_area.update()
     
     def on_trial_start(self):
-        interval = np.random.randint(10, 50, 1) * 100
+        if self._trial_running:
+            return
+        if not self._session_running:
+            self._settings.set_enabled(False)
+            self._session_running = True
+        self._trial_running = True
+        if self._trial_counter >= self._settings.trials:
+            self.task_done.emit
+            return
+        self._trial_counter += 1
+        self._status_label.setText("Trial %i of %i running" % (self._trial_counter, self._settings.trials))
+        self.setStatusTip("Test")
+        min_interval = int(self._settings.min_delay / 100)
+        max_interval = int(self._settings.max_delay / 100)
+        interval = np.random.randint(min_interval, max_interval, 1) * 100
+        self._start_time = None
         timer = QTimer(self)
         timer.setSingleShot(True)
         timer.setInterval(int(interval))
         timer.timeout.connect(self.blip)
         timer.start()
-
+    
+    def on_abort(self):
+        self.reset()
+        self.task_aborted.emit()
+    
+    @property
+    def results(self):
+        return self._reaction_times()
+        
     def reset(self):
-        pass
-
+        self.reset_canvas()
+        self._trial_counter = 0
+        self._session_running = 0
+        self._reaction_times = []
+        self._trial_running = False
+        self._session_running = False
+        self._status_label.setText("Ready to start...")
+        self._settings.set_enabled(True)
+        
