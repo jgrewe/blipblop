@@ -121,7 +121,8 @@ class AudioBlop(QWidget):
         self._trial_counter = 0
         self._session_running = False
         self._trial_running = False
-
+        self._player = QMediaPlayer()
+        
         self.setFocus()
     
     def create_actions(self):
@@ -181,15 +182,7 @@ class AudioBlop(QWidget):
         self._draw_area.setPixmap(self._canvas)
 
     def blip(self):
-        player = QMediaPlayer()
-        url = QUrl.fromLocalFile("/home/grewe/projects/programming/blipblop/sounds/message.wav")
-        print(url)
-        content = QMediaContent(url)
-        print(content)
-        player.setMedia(content)
-        #player.setMedia( QUrl.fromLocalFile("/home/grewe/projects/programming/blipblop/sounds/message.wav"));
-        player.setVolume(100)
-        player.play()
+        self._player.play()
         # print(QAudioDeviceInfo.availableDevices(QAudio.AudioOutput))
         #bells = cnst.get_sound("message")
         #bells.setLoops(10)
@@ -220,7 +213,12 @@ class AudioBlop(QWidget):
             return
         self._trial_counter += 1
         self._status_label.setText("Trial %i of %i running" % (self._trial_counter, self._settings.trials))
-        self.setStatusTip("Test")
+        
+        url = QUrl.fromLocalFile("/home/grewe/projects/programming/blipblop/sounds/message.wav")
+        content = cnst.get_sound("message")
+        self._player.setMedia(content)
+        self._player.setVolume(100)
+       
         min_interval = int(self._settings.min_delay / 100)
         max_interval = int(self._settings.max_delay / 100)
         interval = np.random.randint(min_interval, max_interval, 1) * 100

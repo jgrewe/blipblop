@@ -1,7 +1,8 @@
 import os
 import glob
 from PyQt5.QtGui import QIcon
-from PyQt5.QtMultimedia import QSound
+from PyQt5.QtMultimedia import QMediaContent
+from PyQt5.QtCore import QUrl
 
 organization = "bendalab"
 application = "blipblop"
@@ -32,7 +33,7 @@ def get_sound(name):
     if name in SNDS_DICT.keys():
         print(name)
         print(SNDS_DICT[name])
-        return QSound(SNDS_DICT[name])
+        return QMediaContent(QUrl.fromLocalFile(os.path.abspath(SNDS_DICT[name])))
     else:
         print("Sound %s not found!" % name)
         return None
