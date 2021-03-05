@@ -1,11 +1,10 @@
-from PyQt5.QtWidgets import QAction, QFormLayout, QGridLayout, QLabel, QLineEdit, QSizePolicy, QSlider, QSpinBox, QTextEdit, QWidget
-from PyQt5.QtCore import QIODevice, QPoint, QTimer, Qt, pyqtSignal, QSettings, QUrl
-from PyQt5.QtGui import QColor, QFont, QKeySequence, QPainter, QBrush, QPen, QPixmap
+from PyQt5.QtWidgets import QAction, QComboBox, QFormLayout, QGridLayout, QLabel, QLineEdit, QSizePolicy, QSlider, QSpinBox, QTextEdit, QWidget
+from PyQt5.QtCore import QIODevice, QPoint, QRandomGenerator, QTimer, Qt, pyqtSignal, QSettings, QUrl
+from PyQt5.QtGui import QColor, QFont, QIntValidator, QKeySequence, QPainter, QBrush, QPen, QPixmap
 from PyQt5.QtMultimedia import QSound, QMediaPlayer, QMediaContent, QAudio, QAudioDeviceInfo
 
 import os
 import blipblop.constants as cnst
-import numpy as np
 import datetime as dt
 
 class SettingsPanel(QWidget):
@@ -17,15 +16,23 @@ class SettingsPanel(QWidget):
         self._trial_spinner.setMaximum(25)
         self._trial_spinner.setValue(10)
 
-        self._min_delay_edit = QLineEdit()
-        self._min_delay_edit.setText(str("1000"))
-        self._min_delay_edit.setToolTip("Minimum delay between start of trial and stimulus display")
-        self._min_delay_edit.setEnabled(False)
+        self._min_delay_spinner = QSpinBox()
+        self._min_delay_spinner.setMinimum(1)
+        self._min_delay_spinner.setMaximum(10)
+        self._min_delay_spinner.setValue(1)
+        self._min_delay_spinner.setToolTip("Minimum delay between start of trial and stimulus display [s]")
         
-        self._max_delay_edit = QLineEdit()
-        self._max_delay_edit.setText(str("5000"))
-        self._max_delay_edit.setToolTip("Maximum delay between start of trial and stimulus display")
-        self._max_delay_edit.setEnabled(False)
+        self._max_delay_spinner = QSpinBox() 
+        self._max_delay_spinner.setMinimum(1)
+        self._max_delay_spinner.setMaximum(10)
+        self._max_delay_spinner.setValue(5)
+        self._max_delay_spinner.setToolTip("Maximum delay between start of trial and stimulus display [s]")
+        
+        self._pause_spinner = QSpinBox() 
+        self._pause_spinner.setMinimum(1)
+        self._pause_spinner.setMaximum(10)
+        self._pause_spinner.setValue(3)
+        self._pause_spinner.setToolTip("Pause between trials [s]")
         
         self._saliency_slider = QSlider(Qt.Horizontal)
         self._saliency_slider.setMinimum(0)
@@ -35,13 +42,9 @@ class SettingsPanel(QWidget):
         self._saliency_slider.setTickPosition(QSlider.TicksBelow)
         self._saliency_slider.setToolTip("Saliency of the stimulus, i.e. its opacity")
 
-        self._size_slider = QSlider(Qt.Horizontal)
-        self._size_slider.setMinimum(0)
-        self._size_slider.setMaximum(200)
-        self._size_slider.setSliderPosition(100)
-        self._size_slider.setTickInterval(25)
-        self._size_slider.setTickPosition(QSlider.TicksBelow)
-        self._size_slider.setToolTip("Diameter of the stimulus in pixel")
+        self._sound_combo = QComboBox()
+        for k in cnst.SNDS_DICT.keys():
+            self._sound_combo.addItem(k)
 
         self._instructions = QTextEdit()
         self._instructions.setMarkdown("* fixate central cross\n * press start (enter) when ready\n * press space bar as soon as the stimulus occurs")
@@ -51,10 +54,11 @@ class SettingsPanel(QWidget):
         form_layout = QFormLayout()
         form_layout.addRow("Settings", None)
         form_layout.addRow("number of trials", self._trial_spinner)
-        form_layout.addRow("minimum delay [ms]", self._min_delay_edit)
-        form_layout.addRow("maximum delay [ms]", self._max_delay_edit)
+        form_layout.addRow("minimum delay [s]", self._min_delay_spinner)
+        form_layout.addRow("maximum delay [s]", self._max_delay_spinner)
+        form_layout.addRow("pause [s]", self._pause_spinner)
         form_layout.addRow("stimulus saliency", self._saliency_slider)
-        form_layout.addRow("stimulus size", self._size_slider)
+        form_layout.addRow("stimulus sound", self._sound_combo)
         form_layout.addRow("instructions", self._instructions)
         self.setLayout(form_layout)
 
@@ -72,15 +76,27 @@ class SettingsPanel(QWidget):
     
     @property
     def min_delay(self):
-        return int(self._min_delay_edit.text())
+        return self._min_delay_spinner.value()
     
     @property
     def max_delay(self):
-        return int(self._max_delay_edit.text())
+        return self._max_delay_spinner.value()
+    
+    @property
+    def pause(self):
+        return self._pause_spinner.value()
+    
+    @property
+    def sound(self):
+        return self._sound_combo.currentText()
     
     def set_enabled(self, enabled):
         self._trial_spinner.setEnabled(enabled)
         self._saliency_slider.setEnabled(enabled)
+        self._pause_spinner.setEnabled(enabled)
+        self._min_delay_spinner.setEnabled(enabled)
+        self._max_delay_spinner.setEnabled(enabled)
+        self._sound_combo.setEnabled(False)
 
 
 class AudioBlop(QWidget):
@@ -100,9 +116,16 @@ class AudioBlop(QWidget):
         l = QLabel("Auditory reaction test")
         l.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "auditory_task.png")))
         grid.addWidget(l, 0, 0, Qt.AlignLeft)
-
+        
+        l2 =QLabel("Measurement of auditory reaction times\npress enter to start")
+        font = QFont()
+        font.setBold(True)
+        font.setPointSize(20)
+        l2.setFont(font)
+        l2.setStyleSheet("color: #2D4B9A")
+        grid.addWidget(l2, 0, 1, Qt.AlignLeft)
+        
         self._status_label = QLabel("Ready to start, press enter ...")
-        QFont
         grid.addWidget(self._status_label, 3, 4, Qt.AlignBaseline)
 
         self._draw_area = QLabel()
@@ -122,7 +145,7 @@ class AudioBlop(QWidget):
         self._session_running = False
         self._trial_running = False
         self._player = QMediaPlayer()
-        
+        self._random_generator = QRandomGenerator()
         self.setFocus()
     
     def create_actions(self):
@@ -154,7 +177,6 @@ class AudioBlop(QWidget):
         else:
             reaction_time = self._response_time - self._start_time
             self._reaction_times.append(reaction_time.total_seconds())
-        self.reset_canvas()
         self._trial_running = False
 
     def reset_canvas(self):
@@ -183,27 +205,11 @@ class AudioBlop(QWidget):
 
     def blip(self):
         self._player.play()
-        # print(QAudioDeviceInfo.availableDevices(QAudio.AudioOutput))
-        #bells = cnst.get_sound("message")
-        #bells.setLoops(10)
-        #QSound("mysounds/bells.wav");
-        #bells.play();
-        stim_size = self._settings.size
-        painter = QPainter(self._draw_area.pixmap())    
-        painter.setPen(QPen(Qt.red,  1, Qt.SolidLine))
-        color = QColor(Qt.red)
-        color.setAlphaF(self._settings.saliency/100)
-        painter.setBrush(QBrush(color, Qt.SolidPattern))      
-        painter.drawEllipse(self._canvas_center, stim_size, stim_size)
-        painter.end()
         self._start_time = dt.datetime.now()
-        self._draw_area.update()
     
     def on_trial_start(self):
-        print("start trial",  self._trial_running)
         if self._trial_running:
             return
-        print("start trial")
         if not self._session_running:
             self._settings.set_enabled(False)
             self._session_running = True
@@ -213,15 +219,13 @@ class AudioBlop(QWidget):
             return
         self._trial_counter += 1
         self._status_label.setText("Trial %i of %i running" % (self._trial_counter, self._settings.trials))
-        
-        url = QUrl.fromLocalFile("/home/grewe/projects/programming/blipblop/sounds/message.wav")
-        content = cnst.get_sound("message")
+        content = cnst.get_sound(self._settings.sound)
         self._player.setMedia(content)
-        self._player.setVolume(100)
+        self._player.setVolume(self._settings.saliency)
        
-        min_interval = int(self._settings.min_delay / 100)
-        max_interval = int(self._settings.max_delay / 100)
-        interval = np.random.randint(min_interval, max_interval, 1) * 100
+        min_interval = int(self._settings.min_delay * 10)
+        max_interval = int(self._settings.max_delay * 10)
+        interval = self._random_generator.bounded(min_interval, max_interval) * 100
         self._start_time = None
         timer = QTimer(self)
         timer.setSingleShot(True)
@@ -238,7 +242,6 @@ class AudioBlop(QWidget):
         return self._reaction_times()
         
     def reset(self):
-        self.reset_canvas()
         self._trial_counter = 0
         self._session_running = 0
         self._reaction_times = []
