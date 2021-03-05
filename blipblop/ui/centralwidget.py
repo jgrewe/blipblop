@@ -1,9 +1,12 @@
 from PyQt5.QtWidgets import QStackedLayout, QWidget
 
+import datetime as dt
+
 from blipblop.ui.startscreen import StartScreen
 from blipblop.ui.visualblip import VisualBlip
 from blipblop.ui.audioblop import AudioBlop
 from blipblop.ui.resultsscreen import ResultsScreen
+from blipblop.util.results import MeasurementResults
 
 class CentralWidget(QWidget):
     
@@ -15,7 +18,8 @@ class CentralWidget(QWidget):
         self._start_screen.auditory_task_signal.connect(self.on_new_auditory_task)
 
         self._visual_screen = VisualBlip(self)
-        # self._visual_screen.close_signal.connect(self.on_plot_close)
+        self._visual_screen.task_done.connect(self.on_visual_task_done)
+        self._visual_screen.task_aborted.connect(self.on_task_aborted)
 
         self._auditory_screen = AudioBlop(self)
         #self._auditory_screen.close_signal.connect(self.on_plot_close)
@@ -31,6 +35,7 @@ class CentralWidget(QWidget):
 
         self.setLayout(self._stack)
         self._task_results = []
+        self._task_start = None
         self._stack.setCurrentIndex(0)
 
     def show_file_content(self):
@@ -49,7 +54,22 @@ class CentralWidget(QWidget):
         self._stack.setCurrentIndex(0)
         
     def on_new_visual_task(self):
+        self._task_start = dt.datetime.now()
         self._stack.setCurrentIndex(1)
-    
+
+    def on_visual_task_done(self):
+        task_results = MeasurementResults("Visual task")
+        task_results.starttime = self._task_start
+        task_results.results = self._visual_screen.results
+        self._task_results.append(task_results)
+        self._visual_screen.reset
+        self._stack.setCurrentIndex(0)
+
+    def on_task_aborted(self):
+        self._stack.setCurrentIndex(0)
+
     def on_new_auditory_task(self):
         self._stack.setCurrentIndex(2)
+
+    def on_show_results(self):
+        pass
