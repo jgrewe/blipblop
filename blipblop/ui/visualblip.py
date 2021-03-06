@@ -1,10 +1,9 @@
-from PyQt5.QtWidgets import QAction, QFormLayout, QGridLayout, QLabel, QLineEdit, QSizePolicy, QSlider, QSpinBox, QTextEdit, QWidget
-from PyQt5.QtCore import QPoint, QTimer, Qt, pyqtSignal, QSettings
+from PyQt5.QtWidgets import QAction, QFormLayout, QGridLayout, QLabel, QLineEdit, QPushButton, QSizePolicy, QSlider, QSpinBox, QSplitter, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtCore import QPoint, QRandomGenerator, QTimer, Qt, pyqtSignal, QSettings
 from PyQt5.QtGui import QColor, QFont, QKeySequence, QPainter, QBrush, QPen, QPixmap
 
 import os
 import blipblop.constants as cnst
-import numpy as np
 import datetime as dt
 
 class SettingsPanel(QWidget):
@@ -14,16 +13,16 @@ class SettingsPanel(QWidget):
         self._trial_spinner = QSpinBox()
         self._trial_spinner.setMinimum(5)
         self._trial_spinner.setMaximum(25)
-        self._trial_spinner.setValue(10)
+        self._trial_spinner.setValue(3)
 
         self._min_delay_edit = QLineEdit()
-        self._min_delay_edit.setText(str("1000"))
-        self._min_delay_edit.setToolTip("Minimum delay between start of trial and stimulus display")
+        self._min_delay_edit.setText(str("1"))
+        self._min_delay_edit.setToolTip("Minimum delay between start of trial and stimulus display [s]")
         self._min_delay_edit.setEnabled(False)
         
         self._max_delay_edit = QLineEdit()
-        self._max_delay_edit.setText(str("5000"))
-        self._max_delay_edit.setToolTip("Maximum delay between start of trial and stimulus display")
+        self._max_delay_edit.setText(str("5"))
+        self._max_delay_edit.setToolTip("Maximum delay between start of trial and stimulus display [s]")
         self._max_delay_edit.setEnabled(False)
         
         self._saliency_slider = QSlider(Qt.Horizontal)
@@ -50,8 +49,8 @@ class SettingsPanel(QWidget):
         form_layout = QFormLayout()
         form_layout.addRow("Settings", None)
         form_layout.addRow("number of trials", self._trial_spinner)
-        form_layout.addRow("minimum delay [ms]", self._min_delay_edit)
-        form_layout.addRow("maximum delay [ms]", self._max_delay_edit)
+        form_layout.addRow("minimum delay [s]", self._min_delay_edit)
+        form_layout.addRow("maximum delay [s]", self._max_delay_edit)
         form_layout.addRow("stimulus saliency", self._saliency_slider)
         form_layout.addRow("stimulus size", self._size_slider)
         form_layout.addRow("instructions", self._instructions)
@@ -89,28 +88,50 @@ class VisualBlip(QWidget):
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
         
+        widget = QWidget()
         grid = QGridLayout()
         grid.setColumnStretch(0, 1)
         grid.setColumnStretch(3, 1)
         grid.setRowStretch(1, 1)
         grid.setRowStretch(3, 1)
-        self.setLayout(grid)
+        widget.setLayout(grid)
 
         l = QLabel("Visual reaction test")
         l.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "visual_task.png")))
         grid.addWidget(l, 0, 0, Qt.AlignLeft)
 
+        l2 =QLabel("Measurement of visual reaction times\npress enter to start")
+        font = QFont()
+        font.setBold(True)
+        font.setPointSize(20)
+        l2.setFont(font)
+        l2.setStyleSheet("color: #2D4B9A")
+        grid.addWidget(l2, 1, 0, 1, 2, Qt.AlignLeft)
+        
+        settings_btn = QPushButton(cnst.get_icon("settings"), "")
+        settings_btn.setToolTip("edit task settings")
+        settings_btn.setShortcut(QKeySequence("alt+s"))
+        settings_btn.clicked.connect(self.on_toggle_settings)
+        grid.addWidget(settings_btn, 0, 3, Qt.AlignRight)
+        
         self._status_label = QLabel("Ready to start, press enter ...")
-        QFont
-        grid.addWidget(self._status_label, 3, 4, Qt.AlignBaseline)
+        grid.addWidget(self._status_label, 3, 0, Qt.AlignBaseline)
 
         self._draw_area = QLabel()
         self._draw_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         grid.addWidget(self._draw_area, 2, 1)
         
         self._settings = SettingsPanel()
-        grid.addWidget(self._settings, 2, 4)
-
+        
+        self._splitter = QSplitter()
+        self._splitter.addWidget(widget)
+        self._splitter.addWidget(self._settings)
+        self._splitter.setCollapsible(1, True)
+        self._splitter.widget(1).hide()
+        vbox = QVBoxLayout()
+        vbox.addWidget(self._splitter)
+        self.setLayout(vbox)
+        
         self.reset_canvas()
         self.create_actions()
 
@@ -120,6 +141,7 @@ class VisualBlip(QWidget):
         self._trial_counter = 0
         self._session_running = False
         self._trial_running = False
+        self._random_generator = QRandomGenerator()
 
         self.setFocus()
     
@@ -154,6 +176,8 @@ class VisualBlip(QWidget):
             self._reaction_times.append(reaction_time.total_seconds())
         self.reset_canvas()
         self._trial_running = False
+        if self._trial_counter >= self._settings.trials:
+            self.task_done.emit()
 
     def reset_canvas(self):
         bkg_color = QColor()
@@ -204,9 +228,9 @@ class VisualBlip(QWidget):
         self._trial_counter += 1
         self._status_label.setText("Trial %i of %i running" % (self._trial_counter, self._settings.trials))
         self.setStatusTip("Test")
-        min_interval = int(self._settings.min_delay / 100)
-        max_interval = int(self._settings.max_delay / 100)
-        interval = np.random.randint(min_interval, max_interval, 1) * 100
+        min_interval = int(self._settings.min_delay * 10)
+        max_interval = int(self._settings.max_delay * 10)
+        interval = self._random_generator.bounded(min_interval, max_interval) * 100
         self._start_time = None
         timer = QTimer(self)
         timer.setSingleShot(True)
@@ -220,7 +244,7 @@ class VisualBlip(QWidget):
     
     @property
     def results(self):
-        return self._reaction_times()
+        return self._reaction_times
         
     def reset(self):
         self.reset_canvas()
@@ -232,3 +256,8 @@ class VisualBlip(QWidget):
         self._status_label.setText("Ready to start...")
         self._settings.set_enabled(True)
         
+    def on_toggle_settings(self):
+        if self._splitter.sizes()[1] > 0:
+            self._splitter.widget(1).hide()
+        else:
+            self._splitter.widget(1).show()

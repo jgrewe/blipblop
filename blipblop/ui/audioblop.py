@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QAction, QComboBox, QFormLayout, QGridLayout, QLabel, QLineEdit, QSizePolicy, QSlider, QSpinBox, QTextEdit, QWidget
-from PyQt5.QtCore import QIODevice, QPoint, QRandomGenerator, QTimer, Qt, pyqtSignal, QSettings, QUrl
-from PyQt5.QtGui import QColor, QFont, QIntValidator, QKeySequence, QPainter, QBrush, QPen, QPixmap
-from PyQt5.QtMultimedia import QSound, QMediaPlayer, QMediaContent, QAudio, QAudioDeviceInfo
+from PyQt5.QtWidgets import QAction, QComboBox, QFormLayout, QGridLayout, QLabel, QPushButton, QSizePolicy, QSlider, QSpinBox, QSplitter, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtCore import QPoint, QRandomGenerator, QTimer, Qt, pyqtSignal
+from PyQt5.QtGui import QColor, QFont, QKeySequence, QPainter, QPen, QPixmap
+from PyQt5.QtMultimedia import QMediaPlayer
 
 import os
 import blipblop.constants as cnst
@@ -14,7 +14,7 @@ class SettingsPanel(QWidget):
         self._trial_spinner = QSpinBox()
         self._trial_spinner.setMinimum(5)
         self._trial_spinner.setMaximum(25)
-        self._trial_spinner.setValue(10)
+        self._trial_spinner.setValue(3)
 
         self._min_delay_spinner = QSpinBox()
         self._min_delay_spinner.setMinimum(1)
@@ -105,13 +105,14 @@ class AudioBlop(QWidget):
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
-        
+       
+        widget = QWidget()
         grid = QGridLayout()
         grid.setColumnStretch(0, 1)
         grid.setColumnStretch(3, 1)
         grid.setRowStretch(1, 1)
         grid.setRowStretch(3, 1)
-        self.setLayout(grid)
+        widget.setLayout(grid)
 
         l = QLabel("Auditory reaction test")
         l.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "auditory_task.png")))
@@ -123,18 +124,32 @@ class AudioBlop(QWidget):
         font.setPointSize(20)
         l2.setFont(font)
         l2.setStyleSheet("color: #2D4B9A")
-        grid.addWidget(l2, 0, 1, Qt.AlignLeft)
+        grid.addWidget(l2, 1, 0, 1, 2, Qt.AlignLeft)
+        
+        settings_btn = QPushButton(cnst.get_icon("settings"), "")
+        settings_btn.setToolTip("edit task settings")
+        settings_btn.setShortcut(QKeySequence("alt+s"))
+        settings_btn.clicked.connect(self.on_toggle_settings)
+        grid.addWidget(settings_btn, 0, 3, Qt.AlignRight)
         
         self._status_label = QLabel("Ready to start, press enter ...")
-        grid.addWidget(self._status_label, 3, 4, Qt.AlignBaseline)
+        grid.addWidget(self._status_label, 3, 0, Qt.AlignLeft)
 
         self._draw_area = QLabel()
         self._draw_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         grid.addWidget(self._draw_area, 2, 1)
         
         self._settings = SettingsPanel()
-        grid.addWidget(self._settings, 2, 4)
-
+        
+        self._splitter = QSplitter()
+        self._splitter.addWidget(widget)
+        self._splitter.addWidget(self._settings)
+        self._splitter.setCollapsible(1, True)
+        self._splitter.widget(1).hide()
+        vbox = QVBoxLayout()
+        vbox.addWidget(self._splitter)
+        self.setLayout(vbox)
+        
         self.reset_canvas()
         self.create_actions()
 
@@ -178,6 +193,8 @@ class AudioBlop(QWidget):
             reaction_time = self._response_time - self._start_time
             self._reaction_times.append(reaction_time.total_seconds())
         self._trial_running = False
+        if self._trial_counter >= self._settings.trials:
+            self.task_done.emit()
 
     def reset_canvas(self):
         bkg_color = QColor()
@@ -239,7 +256,7 @@ class AudioBlop(QWidget):
     
     @property
     def results(self):
-        return self._reaction_times()
+        return self._reaction_times
         
     def reset(self):
         self._trial_counter = 0
@@ -250,3 +267,8 @@ class AudioBlop(QWidget):
         self._status_label.setText("Ready to start...")
         self._settings.set_enabled(True)
         
+    def on_toggle_settings(self):
+        if self._splitter.sizes()[1] > 0:
+            self._splitter.widget(1).hide()
+        else:
+            self._splitter.widget(1).show()
