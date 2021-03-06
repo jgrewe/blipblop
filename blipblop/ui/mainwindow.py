@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QWidget, QFileDialog, QMainWindow, QMenuBar, QToolBar, QAction, QStatusBar, QSizePolicy
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QMenuBar, QToolBar, QAction, QStatusBar, QSizePolicy
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtCore import QSize, QSettings, Qt
 
@@ -61,7 +61,7 @@ class BlipBlop(QMainWindow):
         self._auditory_task_action = QAction(cnst.get_icon("auditory_task"), "auditory")
         self._auditory_task_action.setStatusTip("Start measuring auditory reaction times")
         self._auditory_task_action.setShortcut(QKeySequence("Ctrl+2"))
-        self._auditory_task_action.setEnabled(False) 
+        self._auditory_task_action.setEnabled(True) 
         self._auditory_task_action.triggered.connect(self.on_auditory)
 
         self.create_toolbar()
@@ -105,7 +105,7 @@ class BlipBlop(QMainWindow):
         self.setMenuBar(menu)
 
     def on_quit(self, s):
-        sys.exit()
+        self.close()
 
     def on_new(self):
         self._cw.reset()
