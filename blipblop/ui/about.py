@@ -31,7 +31,7 @@ class About(QWidget):
         font.setBold(True)
         heading.setFont(font)
         heading.setAlignment(Qt.AlignCenter)
-        subheading = QLabel("How fast are you?\nmeasure your reaction times to visual and auditory stimuli.\nby Jan Grewe")
+        subheading = QLabel("How fast are you?\nMeasure your reaction times to visual and auditory stimuli.\nby Jan Grewe")
         subheading.setAlignment(Qt.AlignCenter)
         nix_link = QLabel("https://github.com/jgrewe/blipblop")
         nix_link.setOpenExternalLinks(True)
@@ -42,7 +42,7 @@ class About(QWidget):
         # rtd_link.setAlignment(Qt.AlignCenter)
 
         iconlabel = QLabel()
-        pixmap = QPixmap(os.path.join(cnst.ICONS_FOLDER, "nix_logo.png"))
+        pixmap = QPixmap(os.path.join(cnst.ICONS_FOLDER, "blipblop_logo.png"))
         s = pixmap.size()
         new_height = int(s.height() * 300/s.width())
         pixmap = pixmap.scaled(300, new_height, Qt.KeepAspectRatio, Qt.FastTransformation)
