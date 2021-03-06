@@ -30,7 +30,9 @@ class StartScreen(QWidget):
         
         label = QLabel("Measure your reaction times!\nselect a task")
         font = QFont()
+        font.setBold(True)
         font.setPointSize(25)
+        label.setStyleSheet("color: #2D4B9A")
         label.setFont(font)
         label.setAlignment(Qt.AlignCenter)
         layout.addWidget(label, 1, 2, 1, 3, Qt.AlignCenter)

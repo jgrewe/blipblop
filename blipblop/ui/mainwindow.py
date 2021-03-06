@@ -39,7 +39,7 @@ class BlipBlop(QMainWindow):
         self._results_action.setStatusTip("Show results as table")
         self._results_action.setShortcut(QKeySequence("Ctrl+t"))
         self._results_action.setEnabled(True)
-        #self._results_action.triggered.connect(self.on_results)
+        self._results_action.triggered.connect(self.on_results)
 
         self._about_action = QAction("about")
         self._about_action.setStatusTip("Show about dialog")
@@ -125,4 +125,4 @@ class BlipBlop(QMainWindow):
         self._cw.on_new_auditory_task()
 
     def on_results(self):
-            self._cw.on_show_results()
+        self._cw.on_show_results()

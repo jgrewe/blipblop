@@ -22,10 +22,11 @@ class CentralWidget(QWidget):
         self._visual_screen.task_aborted.connect(self.on_task_aborted)
 
         self._auditory_screen = AudioBlop(self)
-        #self._auditory_screen.close_signal.connect(self.on_plot_close)
+        self._auditory_screen.task_done.connect(self.on_auditory_task_done)
+        self._auditory_screen.task_aborted.connect(self.on_task_aborted)
         
         self._results_screen = ResultsScreen(self)
-        #self._results_screen.close_signal.connect(self.on_plot_close)
+        #self._results_screen.close_signal.connect(self.on_show_results)
         
         self._stack = QStackedLayout(self)
         self._stack.addWidget(self._start_screen)     # 0
@@ -70,6 +71,15 @@ class CentralWidget(QWidget):
 
     def on_new_auditory_task(self):
         self._stack.setCurrentIndex(2)
+        
+    def on_auditory_task_done(self):
+        task_results = MeasurementResults("Auditory task")
+        task_results.starttime = self._task_start
+        task_results.results = self._visual_screen.results
+        self._task_results.append(task_results)
+        self._visual_screen.reset
+        self._stack.setCurrentIndex(0)
 
     def on_show_results(self):
+        print(self._task_results)
         pass
