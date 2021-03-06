@@ -1,7 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QMenuBar, QToolBar, QAction, QStatusBar, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QMainWindow, QMenuBar, QToolBar, QAction, QStatusBar, QSizePolicy
 from PyQt5.QtGui import QKeySequence
-from PyQt5.QtCore import QSize, QSettings, Qt
+from PyQt5.QtCore import QSize, Qt
 
 import blipblop.constants as cnst
 from blipblop.ui.help import HelpDialog
@@ -37,7 +37,7 @@ class BlipBlop(QMainWindow):
 
         self._results_action = QAction(cnst.get_icon("nix_data_frame"), "Show results", self)
         self._results_action.setStatusTip("Show results as table")
-        self._results_action.setShortcut(QKeySequence("Ctrl+t"))
+        self._results_action.setShortcut(QKeySequence("Ctrl+r"))
         self._results_action.setEnabled(True)
         self._results_action.triggered.connect(self.on_results)
 
@@ -98,6 +98,8 @@ class BlipBlop(QMainWindow):
         task_menu.addSeparator()
         task_menu.addAction(self._visual_task_action)
         task_menu.addAction(self._auditory_task_action)
+        task_menu.addSeparator()
+        task_menu.addAction(self._results_action)
        
         help_menu = menu.addMenu("&Help")
         help_menu.addAction(self._about_action)
