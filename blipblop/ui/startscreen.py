@@ -39,13 +39,13 @@ class StartScreen(QWidget):
         
         visual_task_label = MyLabel()
         visual_task_label.setToolTip("Click to start a new visual task (Ctrl+1)")
-        visual_task_label.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "visual_task_large.png")))
+        visual_task_label.setPixmap(QPixmap(":/icons/visual_task_large"))
         visual_task_label.setMaximumWidth(256)
         visual_task_label.clicked.connect(self.new_visual_task)
         
         auditory_task_label = MyLabel()
         auditory_task_label.setToolTip("Click to start a new auditory task (Ctrl+2)")
-        auditory_task_label.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "auditory_task_large.png")))
+        auditory_task_label.setPixmap(QPixmap(":/icons/auditory_task_large"))
         auditory_task_label.setMaximumWidth(256)
         auditory_task_label.clicked.connect(self.new_auditory_task)
         

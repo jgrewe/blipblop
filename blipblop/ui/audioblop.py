@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QAction, QComboBox, QFormLayout, QGridLayout, QLabel, QPushButton, QSizePolicy, QSlider, QSpinBox, QSplitter, QTextEdit, QVBoxLayout, QWidget
 from PyQt5.QtCore import QPoint, QRandomGenerator, QTimer, Qt, pyqtSignal
-from PyQt5.QtGui import QColor, QFont, QKeySequence, QPainter, QPen, QPixmap
+from PyQt5.QtGui import QColor, QFont, QIcon, QKeySequence, QPainter, QPen, QPixmap
 from PyQt5.QtMultimedia import QMediaPlayer
 
 import os
@@ -117,7 +117,7 @@ class AudioBlop(QWidget):
         widget.setLayout(grid)
 
         l = QLabel("Auditory reaction test")
-        l.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "auditory_task.png")))
+        l.setPixmap(QPixmap(":/icons/auditory_task"))
         grid.addWidget(l, 0, 0, Qt.AlignLeft)
         
         l2 =QLabel("Measurement of auditory reaction times\npress enter to start")
@@ -128,7 +128,7 @@ class AudioBlop(QWidget):
         l2.setStyleSheet("color: #2D4B9A")
         grid.addWidget(l2, 1, 0, 1, 2, Qt.AlignLeft)
         
-        settings_btn = QPushButton(cnst.get_icon("settings"), "")
+        settings_btn = QPushButton(QIcon(":/icons/settings"), "")
         settings_btn.setToolTip("edit task settings")
         settings_btn.setShortcut(QKeySequence("alt+s"))
         settings_btn.clicked.connect(self.on_toggle_settings)

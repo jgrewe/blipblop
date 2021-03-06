@@ -25,17 +25,17 @@ class BlipBlop(QMainWindow):
         self.show()
     
     def create_actions(self):
-        self._quit_action = QAction(cnst.get_icon("nixview_quit"), "Quit", self)
+        self._quit_action = QAction(QIcon(":/icons/quit"), "Quit", self)
         self._quit_action.setStatusTip("Quit BlipBlop")
         self._quit_action.setShortcut(QKeySequence("Ctrl+q"))
         self._quit_action.triggered.connect(self.on_quit)
 
-        self._new_action = QAction(cnst.get_icon("new_task"), "New session", self)
+        self._new_action = QAction(QIcon(":/icons/new_session"), "New session", self)
         self._new_action.setStatusTip("Start a new session discarding previous results")
         self._new_action.setShortcut(QKeySequence("Ctrl+n"))
         self._new_action.triggered.connect(self.on_new)
 
-        self._results_action = QAction(cnst.get_icon("nix_data_frame"), "Show results", self)
+        self._results_action = QAction(QIcon(":/icons/results_table"), "Show results", self)
         self._results_action.setStatusTip("Show results as table")
         self._results_action.setShortcut(QKeySequence("Ctrl+r"))
         self._results_action.setEnabled(True)
@@ -46,20 +46,19 @@ class BlipBlop(QMainWindow):
         self._about_action.setEnabled(True)
         self._about_action.triggered.connect(self.on_about)
 
-        self._help_action = QAction(cnst.get_icon("nixview_help"), "help")
+        self._help_action = QAction(QIcon(":/icons/help"), "help")
         self._help_action.setStatusTip("Show help dialog")
         self._help_action.setShortcut(QKeySequence("F1"))
         self._help_action.setEnabled(True)
         self._help_action.triggered.connect(self.on_help)
 
-        # self._visual_task_action = QAction(cnst.get_icon("visual_task"), "visual")
         self._visual_task_action = QAction(QIcon(":/icons/visual_task"), "visual")
         self._visual_task_action.setStatusTip("Start measuring visual reaction times")
         self._visual_task_action.setShortcut(QKeySequence("Ctrl+1"))
         self._visual_task_action.setEnabled(True)
         self._visual_task_action.triggered.connect(self.on_visual)
 
-        self._auditory_task_action = QAction(cnst.get_icon("auditory_task"), "auditory")
+        self._auditory_task_action = QAction(QIcon(":/icons/auditory_task"), "auditory")
         self._auditory_task_action.setStatusTip("Start measuring auditory reaction times")
         self._auditory_task_action.setShortcut(QKeySequence("Ctrl+2"))
         self._auditory_task_action.setEnabled(True) 

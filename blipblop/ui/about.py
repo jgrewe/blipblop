@@ -3,8 +3,6 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QLabel, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt
 
-import blipblop.constants as cnst
-
 
 class AboutDialog(QDialog):
     
@@ -42,7 +40,7 @@ class About(QWidget):
         # rtd_link.setAlignment(Qt.AlignCenter)
 
         iconlabel = QLabel()
-        pixmap = QPixmap(os.path.join(cnst.ICONS_FOLDER, "blipblop_logo.png"))
+        pixmap = QPixmap(":/icons/blipblop_logo")
         s = pixmap.size()
         new_height = int(s.height() * 300/s.width())
         pixmap = pixmap.scaled(300, new_height, Qt.KeepAspectRatio, Qt.FastTransformation)

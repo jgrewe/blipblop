@@ -1,4 +1,3 @@
-import os
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFrame, QHBoxLayout, QPushButton, QSizePolicy, QTextBrowser, QVBoxLayout, QWidget
 from PyQt5.QtCore import QUrl
@@ -17,12 +16,12 @@ class HelpDialog(QDialog):
 
         self.help._edit.historyChanged.connect(self._on_history_changed)
         
-        self.back_btn = QPushButton(QIcon(os.path.join(cnst.ICONS_FOLDER, "back_btn")), "back")
+        self.back_btn = QPushButton(QIcon(":/icons/back_btn"), "back")
         self.back_btn.setEnabled(False)
         self.back_btn.clicked.connect(self.help._edit.backward)
-        self.home_btn = QPushButton(QIcon(os.path.join(cnst.ICONS_FOLDER, "home_btn")),"home")
+        self.home_btn = QPushButton(QIcon(":/icons/home_btn"),"home")
         self.home_btn.clicked.connect(self.help._edit.home)
-        self.fwd_btn = QPushButton(QIcon(os.path.join(cnst.ICONS_FOLDER, "fwd_btn")),"forward")
+        self.fwd_btn = QPushButton(QIcon(":/icons/fwd_btn"),"forward")
         self.fwd_btn.setEnabled(False)
         self.fwd_btn.clicked.connect(self.help._edit.forward)
         
@@ -53,7 +52,7 @@ class HelpBrowser(QWidget):
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
         self.setLayout(QVBoxLayout())
-
+        # FIXME https://stackoverflow.com/a/43217828  about loading from esource files
         doc_url = QUrl.fromLocalFile(cnst.DOCS_ROOT_FILE)
         self._edit = QTextBrowser()
         self._edit.setOpenLinks(True)

@@ -1,0 +1,23 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="icons">
+        <file alias="app_icon">icons/blipblop_logo.icns</file>
+        <file alias="blipblop_logo">icons/blipblop_logo.png</file>
+        <file alias="visual_task">icons/visual_task.png</file>
+        <file alias="visual_task_large">icons/visual_task_large.png</file>
+        <file alias="auditory_task">icons/auditory_task.png</file>
+        <file alias="auditory_task_large">icons/auditory_task_large.png</file>
+        <file alias="docs_home">icons/home_btn.png</file>
+        <file alias="docs_back">icons/back_btn.png</file>
+        <file alias="docs_forward">icons/fwd_btn.png</file>
+        <file alias="help">icons/help.png</file>
+        <file alias="new_session">icons/new_session.png</file>
+        <file alias="new_session_larg">icons/new_session_large.png</file>
+        <file alias="results_table">icons/blipblop_table.png</file>
+        <file alias="settings">icons/settings.png</file>
+
+    </qresource>
+    <qresource prefix="docs">
+        <file alias="index">docs/index.md</file>
+    </qresource>
+</RCC>
