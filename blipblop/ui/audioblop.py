@@ -5,6 +5,7 @@ from PyQt5.QtMultimedia import QMediaPlayer
 
 import os
 import blipblop.constants as cnst
+from blipblop.ui.countdownlabel import CountdownLabel
 import datetime as dt
 
 class SettingsPanel(QWidget):
@@ -14,7 +15,8 @@ class SettingsPanel(QWidget):
         self._trial_spinner = QSpinBox()
         self._trial_spinner.setMinimum(5)
         self._trial_spinner.setMaximum(25)
-        self._trial_spinner.setValue(3)
+        self._trial_spinner.setValue(5)
+        self._trial_spinner.setToolTip("Number of consecutive trials (5 - 25)")
 
         self._min_delay_spinner = QSpinBox()
         self._min_delay_spinner.setMinimum(1)
@@ -28,11 +30,11 @@ class SettingsPanel(QWidget):
         self._max_delay_spinner.setValue(5)
         self._max_delay_spinner.setToolTip("Maximum delay between start of trial and stimulus display [s]")
         
-        self._pause_spinner = QSpinBox() 
-        self._pause_spinner.setMinimum(1)
-        self._pause_spinner.setMaximum(10)
-        self._pause_spinner.setValue(3)
-        self._pause_spinner.setToolTip("Pause between trials [s]")
+        self._countdown_spinner = QSpinBox() 
+        self._countdown_spinner.setMinimum(1)
+        self._countdown_spinner.setMaximum(10)
+        self._countdown_spinner.setValue(3)
+        self._countdown_spinner.setToolTip("Pause between trials [s]")
         
         self._saliency_slider = QSlider(Qt.Horizontal)
         self._saliency_slider.setMinimum(0)
@@ -40,7 +42,7 @@ class SettingsPanel(QWidget):
         self._saliency_slider.setSliderPosition(100)
         self._saliency_slider.setTickInterval(25)
         self._saliency_slider.setTickPosition(QSlider.TicksBelow)
-        self._saliency_slider.setToolTip("Saliency of the stimulus, i.e. its opacity")
+        self._saliency_slider.setToolTip("Saliency of the stimulus, i.e. its loudness")
 
         self._sound_combo = QComboBox()
         for k in cnst.SNDS_DICT.keys():
@@ -56,7 +58,7 @@ class SettingsPanel(QWidget):
         form_layout.addRow("number of trials", self._trial_spinner)
         form_layout.addRow("minimum delay [s]", self._min_delay_spinner)
         form_layout.addRow("maximum delay [s]", self._max_delay_spinner)
-        form_layout.addRow("pause [s]", self._pause_spinner)
+        form_layout.addRow("pause [s]", self._countdown_spinner)
         form_layout.addRow("stimulus saliency", self._saliency_slider)
         form_layout.addRow("stimulus sound", self._sound_combo)
         form_layout.addRow("instructions", self._instructions)
@@ -83,8 +85,8 @@ class SettingsPanel(QWidget):
         return self._max_delay_spinner.value()
     
     @property
-    def pause(self):
-        return self._pause_spinner.value()
+    def countdown(self):
+        return self._countdown_spinner.value()
     
     @property
     def sound(self):
@@ -93,7 +95,7 @@ class SettingsPanel(QWidget):
     def set_enabled(self, enabled):
         self._trial_spinner.setEnabled(enabled)
         self._saliency_slider.setEnabled(enabled)
-        self._pause_spinner.setEnabled(enabled)
+        self._countdown_spinner.setEnabled(enabled)
         self._min_delay_spinner.setEnabled(enabled)
         self._max_delay_spinner.setEnabled(enabled)
         self._sound_combo.setEnabled(False)
@@ -135,6 +137,10 @@ class AudioBlop(QWidget):
         self._status_label = QLabel("Ready to start, press enter ...")
         grid.addWidget(self._status_label, 3, 0, Qt.AlignLeft)
 
+        self._countdown_label = CountdownLabel(text="Next trial in:")
+        grid.addWidget(self._countdown_label, 3, 1, Qt.AlignCenter)
+        self._countdown_label.countdown_done.connect(self.run_trial)
+        
         self._draw_area = QLabel()
         self._draw_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         grid.addWidget(self._draw_area, 2, 1)
@@ -186,15 +192,20 @@ class AudioBlop(QWidget):
         
         self._response_time = dt.datetime.now()
         if self._trial_counter < self._settings.trials:
-            self._status_label.setText("Trial %i of %i, press enter for next trial" % (self._trial_counter, self._settings.trials))
+            self._status_label.setText("Trial %i of %i" % (self._trial_counter, self._settings.trials))
         if self._start_time is None:
             self._reaction_times.append(-1000)
         else:
             reaction_time = self._response_time - self._start_time
             self._reaction_times.append(reaction_time.total_seconds())
         self._trial_running = False
+        if self._timer.isActive():
+            self._timer.stop()
         if self._trial_counter >= self._settings.trials:
             self.task_done.emit()
+            return
+        self._countdown_label.start(self._settings.countdown)
+
 
     def reset_canvas(self):
         bkg_color = QColor()
@@ -230,6 +241,9 @@ class AudioBlop(QWidget):
         if not self._session_running:
             self._settings.set_enabled(False)
             self._session_running = True
+        self._countdown_label.start(time=self._settings.countdown)
+
+    def run_trial(self):
         self._trial_running = True
         if self._trial_counter >= self._settings.trials:
             self.task_done.emit
@@ -244,11 +258,11 @@ class AudioBlop(QWidget):
         max_interval = int(self._settings.max_delay * 10)
         interval = self._random_generator.bounded(min_interval, max_interval) * 100
         self._start_time = None
-        timer = QTimer(self)
-        timer.setSingleShot(True)
-        timer.setInterval(int(interval))
-        timer.timeout.connect(self.blip)
-        timer.start()
+        self._timer = QTimer(self)
+        self._timer.setSingleShot(True)
+        self._timer.setInterval(int(interval))
+        self._timer.timeout.connect(self.blip)
+        self._timer.start()
     
     def on_abort(self):
         self.reset()
@@ -266,6 +280,7 @@ class AudioBlop(QWidget):
         self._session_running = False
         self._status_label.setText("Ready to start...")
         self._settings.set_enabled(True)
+        self._countdown_label.stop()
         
     def on_toggle_settings(self):
         if self._splitter.sizes()[1] > 0:
