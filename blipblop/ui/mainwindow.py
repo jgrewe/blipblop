@@ -1,8 +1,8 @@
-import sys
 from PyQt5.QtWidgets import QWidget, QMainWindow, QMenuBar, QToolBar, QAction, QStatusBar, QSizePolicy
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtCore import QSize, Qt
 
+import resources as res
 import blipblop.constants as cnst
 from blipblop.ui.help import HelpDialog
 from blipblop.ui.about import AboutDialog
@@ -52,7 +52,8 @@ class BlipBlop(QMainWindow):
         self._help_action.setEnabled(True)
         self._help_action.triggered.connect(self.on_help)
 
-        self._visual_task_action = QAction(cnst.get_icon("visual_task"), "visual")
+        # self._visual_task_action = QAction(cnst.get_icon("visual_task"), "visual")
+        self._visual_task_action = QAction(QIcon(":/icons/visual_task"), "visual")
         self._visual_task_action.setStatusTip("Start measuring visual reaction times")
         self._visual_task_action.setShortcut(QKeySequence("Ctrl+1"))
         self._visual_task_action.setEnabled(True)

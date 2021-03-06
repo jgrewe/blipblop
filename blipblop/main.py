@@ -3,12 +3,22 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QSettings
 from blipblop.ui.mainwindow import BlipBlop
+import blipblop.constants as cnst
+
+try:
+    # Include in try/except block if you're also targeting Mac/Linux
+    from PyQt5.QtWinExtras import QtWin
+    myappid = 'neuroetho.uni-tuebingen.de.blipblop.0.1'
+    QtWin.setCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
 
 def main():
     app = QApplication(sys.argv)
     app.setApplicationName("blipblop")
     app.setApplicationVersion("0.1")
     app.setOrganizationDomain("neuroetho.uni-tuebingen.de")
+    app.setWindowIcon(cnst.get_icon("blipblop_logo.png"))
     settings = QSettings()
     width = settings.value("app/width", 1024)
     height = settings.value("app/height", 768)
