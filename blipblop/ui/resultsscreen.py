@@ -2,8 +2,8 @@ import io
 import csv
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QFont, QKeySequence
-from PyQt5.QtWidgets import QAction, QComboBox, QFrame, QGroupBox, QHBoxLayout, QLabel, QSplitter, QStackedLayout, QTableWidget, QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget
-from PyQt5.QtCore import QItemSelectionModel, Qt, reset, pyqtSignal
+from PyQt5.QtWidgets import QAction, QLabel, QStackedLayout, QTableWidget, QTableWidgetItem, QWidget
+from PyQt5.QtCore import Qt, pyqtSignal
 
 import blipblop.constants as cnst
 from blipblop.util.results import MeasurementResults
