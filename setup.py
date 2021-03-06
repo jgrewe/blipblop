@@ -27,7 +27,7 @@ packages = [
     "blipblop",
 ]
 
-install_req = ["PyQt5", "numpy"]
+install_req = ["PyQt5", "json", "os", "glob"]
 
 data_files = [("icons", glob.glob(os.path.join("icons", "*.png"))),
               ("icons", glob.glob(os.path.join("icons", "*.ic*"))),

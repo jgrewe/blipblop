@@ -31,8 +31,6 @@ for snd in SNDS_PATHS:
 
 def get_sound(name):
     if name in SNDS_DICT.keys():
-        print(name)
-        print(SNDS_DICT[name])
         return QMediaContent(QUrl.fromLocalFile(os.path.abspath(SNDS_DICT[name])))
     else:
         print("Sound %s not found!" % name)
