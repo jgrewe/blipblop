@@ -35,8 +35,8 @@ jobs:
     
     - name: create package
       run: |
-        pyrcc5 resources.qrc resources.py
-        pyinstaller --onefile --windowed -i icons/blipblop_logo.icns --add_data="icons/blipblop_logo.png:." blipblop.py
+        pyrcc5 resources.qrc
+        pyinstaller --onefile --windowed -i icons/blipblop_logo.icns --add_data="icons/blipblop_logo.png:." --add_data="resources.py:." blipblop.py
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.2
