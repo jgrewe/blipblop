@@ -15,7 +15,11 @@
         <file alias="new_session_larg">icons/new_session_large.png</file>
         <file alias="results_table">icons/blipblop_table.png</file>
         <file alias="settings">icons/settings.png</file>
-
+    </qresource>
+    <qresource prefix="sounds">
+        <file alias="bell">sounds/bell.wav</file>
+        <file alias="message">sounds/message.wav</file>
+        <file alias="complete">sounds/complete.wav</file>
     </qresource>
     <qresource prefix="docs">
         <file alias="index">docs/index.md</file>

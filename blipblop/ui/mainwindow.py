@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QWidget, QMainWindow, QMenuBar, QToolBar, QAction, Q
 from PyQt5.QtGui import QIcon, QKeySequence
 from PyQt5.QtCore import QSize, Qt
 
-import resources as res
 import blipblop.constants as cnst
 from blipblop.ui.help import HelpDialog
 from blipblop.ui.about import AboutDialog

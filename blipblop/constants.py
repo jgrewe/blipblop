@@ -4,6 +4,8 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtMultimedia import QMediaContent
 from PyQt5.QtCore import QUrl
 
+import resources
+
 organization = "neuroetho.uni-tuebingen.de"
 application = "blipblop"
 version = 0.1
