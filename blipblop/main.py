@@ -9,7 +9,7 @@ import blipblop.constants as cnst
 try:
     # Include in try/except block if you're also targeting Mac/Linux
     from PyQt5.QtWinExtras import QtWin
-    myappid = 'neuroetho.uni-tuebingen.de.blipblop.0.1'
+    myappid = "%s.%s" %(cnst.organization_name, cnst.application_version)
     QtWin.setCurrentProcessExplicitAppUserModelID(myappid)
 except ImportError:
     pass
@@ -17,7 +17,7 @@ except ImportError:
 def main():
     app = QApplication(sys.argv)
     app.setApplicationName(cnst.application_name)
-    app.setApplicationVersion(cnst.application_version)
+    app.setApplicationVersion(str(cnst.application_version))
     app.setOrganizationDomain(cnst.organization_name)
     app.setWindowIcon(QIcon(":/icons/app_icon_png"))
     settings = QSettings()
@@ -40,6 +40,5 @@ def main():
     settings.setValue("app/pos_y", pos.y())
     sys.exit(code)
     
-
 if __name__ == "__main__":
     main()

@@ -12,6 +12,7 @@
         <file alias="docs_back">icons/back_btn.png</file>
         <file alias="docs_forward">icons/fwd_btn.png</file>
         <file alias="help">icons/help.png</file>
+        <file alias="quit">icons/blipblop_quit.png</file>
         <file alias="new_session">icons/new_session.png</file>
         <file alias="new_session_larg">icons/new_session_large.png</file>
         <file alias="results_table">icons/blipblop_table.png</file>

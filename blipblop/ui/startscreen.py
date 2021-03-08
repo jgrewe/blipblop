@@ -3,8 +3,6 @@ from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtCore import Qt, pyqtSignal
 
-import blipblop.constants as cnst
-
 
 class MyLabel(QLabel):
     clicked = pyqtSignal()
@@ -38,13 +36,15 @@ class StartScreen(QWidget):
         layout.addWidget(label, 1, 2, 1, 3, Qt.AlignCenter)
         
         visual_task_label = MyLabel()
+        visual_task_label.setStatusTip("Start a new visual measurement (Ctrl+1)")
         visual_task_label.setToolTip("Click to start a new visual task (Ctrl+1)")
         visual_task_label.setPixmap(QPixmap(":/icons/visual_task_large"))
         visual_task_label.setMaximumWidth(256)
         visual_task_label.clicked.connect(self.new_visual_task)
         
         auditory_task_label = MyLabel()
-        auditory_task_label.setToolTip("Click to start a new auditory task (Ctrl+2)")
+        auditory_task_label.setStatusTip("Start a new auditory measurement (Ctrl+2)")
+        auditory_task_label.setToolTip("click to start a new auditory task (Ctrl+2)")
         auditory_task_label.setPixmap(QPixmap(":/icons/auditory_task_large"))
         auditory_task_label.setMaximumWidth(256)
         auditory_task_label.clicked.connect(self.new_auditory_task)
