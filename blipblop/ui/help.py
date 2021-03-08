@@ -16,12 +16,12 @@ class HelpDialog(QDialog):
 
         self.help._edit.historyChanged.connect(self._on_history_changed)
         
-        self.back_btn = QPushButton(QIcon(":/icons/back_btn"), "back")
+        self.back_btn = QPushButton(QIcon(":/icons/docs_back"), "back")
         self.back_btn.setEnabled(False)
         self.back_btn.clicked.connect(self.help._edit.backward)
-        self.home_btn = QPushButton(QIcon(":/icons/home_btn"),"home")
+        self.home_btn = QPushButton(QIcon(":/icons/docs_home"),"home")
         self.home_btn.clicked.connect(self.help._edit.home)
-        self.fwd_btn = QPushButton(QIcon(":/icons/fwd_btn"),"forward")
+        self.fwd_btn = QPushButton(QIcon(":/icons/docs_fwd"),"forward")
         self.fwd_btn.setEnabled(False)
         self.fwd_btn.clicked.connect(self.help._edit.forward)
         

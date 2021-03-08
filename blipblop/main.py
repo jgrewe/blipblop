@@ -16,9 +16,9 @@ except ImportError:
 
 def main():
     app = QApplication(sys.argv)
-    app.setApplicationName("blipblop")
-    app.setApplicationVersion("0.1")
-    app.setOrganizationDomain("neuroetho.uni-tuebingen.de")
+    app.setApplicationName(cnst.application_name)
+    app.setApplicationVersion(cnst.application_version)
+    app.setOrganizationDomain(cnst.organization_name)
     app.setWindowIcon(QIcon(":/icons/app_icon_png"))
     settings = QSettings()
     width = int(settings.value("app/width", 1024))

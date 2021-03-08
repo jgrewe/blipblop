@@ -2,13 +2,20 @@ import os
 import glob
 from PyQt5.QtGui import QIcon
 from PyQt5.QtMultimedia import QMediaContent
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QDirIterator, QUrl
 
 import resources
 
-organization = "neuroetho.uni-tuebingen.de"
-application = "blipblop"
-version = 0.1
+SNDS_DICT = {}
+it = QDirIterator(":", QDirIterator.Subdirectories);
+while it.hasNext():
+    name = it.next()
+    if "sounds/" in name:
+        SNDS_DICT[name.split("/")[-1]] = "qrc" + name
+
+organization_name = "de.uni-tuebingen.neuroetho"
+application_name = "BlipBlop"
+application_version = 0.1
 
 PACKAGE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 ICONS_FOLDER = os.path.join(PACKAGE_ROOT, "icons")
@@ -20,20 +27,12 @@ ICONS_PATHS.extend(glob.glob(os.path.join(ICONS_FOLDER, "*.icns")))
 ICONS_PATHS = sorted(ICONS_PATHS)
 ICON_DICT = {}
 
-SNDS_PATHS = glob.glob(os.path.join(SNDS_FOLDER, "*.wav"))
-SNDS_PATHS = sorted(SNDS_PATHS)
-SNDS_DICT = {}
-
 for icon in ICONS_PATHS:
     ICON_DICT[icon.split(os.sep)[-1].split(".")[0]] = icon
 
-for snd in SNDS_PATHS:
-    SNDS_DICT[snd.split(os.sep)[-1].split(".")[0]] = snd
-
-
 def get_sound(name):
     if name in SNDS_DICT.keys():
-        return QMediaContent(QUrl.fromLocalFile(os.path.abspath(SNDS_DICT[name])))
+        return QMediaContent(QUrl(SNDS_DICT[name]))
     else:
         print("Sound %s not found!" % name)
         return None
@@ -43,5 +42,5 @@ def get_icon(name):
     if name in ICON_DICT.keys():
         return QIcon(ICON_DICT[name])
     else:
-        return QIcon("nix_logo.png")
+        return QIcon("blipblop_logo.png")
 

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QAction, QComboBox, QFormLayout, QGridLayout, QLabel, QPushButton, QSizePolicy, QSlider, QSpinBox, QSplitter, QTextEdit, QVBoxLayout, QWidget
-from PyQt5.QtCore import QPoint, QRandomGenerator, QTimer, Qt, pyqtSignal
+from PyQt5.QtCore import QPoint, QRandomGenerator, QTimer, Qt, endl, pyqtSignal
 from PyQt5.QtGui import QColor, QFont, QIcon, QKeySequence, QPainter, QPen, QPixmap
 from PyQt5.QtMultimedia import QMediaPlayer
 
@@ -98,7 +98,7 @@ class SettingsPanel(QWidget):
         self._countdown_spinner.setEnabled(enabled)
         self._min_delay_spinner.setEnabled(enabled)
         self._max_delay_spinner.setEnabled(enabled)
-        self._sound_combo.setEnabled(False)
+        self._sound_combo.setEnabled(enabled)
 
 
 class AudioBlop(QWidget):
@@ -135,10 +135,10 @@ class AudioBlop(QWidget):
         grid.addWidget(settings_btn, 0, 3, Qt.AlignRight)
         
         self._status_label = QLabel("Ready to start, press enter ...")
-        grid.addWidget(self._status_label, 3, 0, Qt.AlignLeft)
+        grid.addWidget(self._status_label, 4, 0, Qt.AlignLeft)
 
         self._countdown_label = CountdownLabel(text="Next trial in:")
-        grid.addWidget(self._countdown_label, 3, 1, Qt.AlignCenter)
+        grid.addWidget(self._countdown_label, 4, 1, Qt.AlignCenter)
         self._countdown_label.countdown_done.connect(self.run_trial)
         
         self._draw_area = QLabel()
