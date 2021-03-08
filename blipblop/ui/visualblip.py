@@ -154,6 +154,7 @@ class VisualBlip(QWidget):
             return
         if not self._session_running:
             self._settings.set_enabled(False)
+            self._settings.store_settings()
             self._session_running = True
         self._countdown_label.start(time=self._settings.countdown)
 
