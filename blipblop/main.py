@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QSettings
 from blipblop.ui.mainwindow import BlipBlop
@@ -18,12 +19,12 @@ def main():
     app.setApplicationName("blipblop")
     app.setApplicationVersion("0.1")
     app.setOrganizationDomain("neuroetho.uni-tuebingen.de")
-    app.setWindowIcon(cnst.get_icon("blipblop_logo.png"))
+    app.setWindowIcon(QIcon(":/icons/app_icon_png"))
     settings = QSettings()
-    width = settings.value("app/width", 1024)
-    height = settings.value("app/height", 768)
-    x = settings.value("app/pos_x", 100)
-    y = settings.value("app/pos_y", 100)
+    width = int(settings.value("app/width", 1024))
+    height = int(settings.value("app/height", 768))
+    x = int(settings.value("app/pos_x", 100))
+    y = int(settings.value("app/pos_y", 100))
     window = BlipBlop()
     window.setMinimumWidth(800)
     window.setMinimumHeight(600)

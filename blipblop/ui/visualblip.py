@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QAction, QFormLayout, QGridLayout, QLabel, QLineEdit, QPushButton, QSizePolicy, QSlider, QSpinBox, QSplitter, QTextEdit, QVBoxLayout, QWidget
 from PyQt5.QtCore import QPoint, QRandomGenerator, QTimer, Qt, pyqtSignal, QSettings
-from PyQt5.QtGui import QColor, QFont, QKeySequence, QPainter, QBrush, QPen, QPixmap
+from PyQt5.QtGui import QColor, QFont, QIcon, QKeySequence, QPainter, QBrush, QPen, QPixmap
 
 import os
 import blipblop.constants as cnst
@@ -116,7 +116,7 @@ class VisualBlip(QWidget):
         widget.setLayout(grid)
 
         l = QLabel("Visual reaction test")
-        l.setPixmap(QPixmap(os.path.join(cnst.ICONS_FOLDER, "visual_task.png")))
+        l.setPixmap(QPixmap(":/icons/visual_task"))
         grid.addWidget(l, 0, 0, Qt.AlignLeft)
 
         l2 = QLabel("Measurement of visual reaction times\npress enter to start")
@@ -127,17 +127,17 @@ class VisualBlip(QWidget):
         l2.setStyleSheet("color: #2D4B9A")
         grid.addWidget(l2, 1, 0, 1, 2, Qt.AlignLeft)
         
-        settings_btn = QPushButton(cnst.get_icon("settings"), "")
+        settings_btn = QPushButton(QIcon(":/icons/settings"), "")
         settings_btn.setToolTip("edit task settings")
         settings_btn.setShortcut(QKeySequence("alt+s"))
         settings_btn.clicked.connect(self.on_toggle_settings)
         grid.addWidget(settings_btn, 0, 3, Qt.AlignRight)
         
         self._status_label = QLabel("Ready to start, press enter ...")
-        grid.addWidget(self._status_label, 3, 0, Qt.AlignBaseline)
+        grid.addWidget(self._status_label, 4, 0, Qt.AlignBaseline)
         
         self._countdown_label = CountdownLabel(text="Next trial in:")
-        grid.addWidget(self._countdown_label, 3, 1, Qt.AlignCenter)
+        grid.addWidget(self._countdown_label, 4, 1, Qt.AlignCenter)
         self._countdown_label.countdown_done.connect(self.run_trial)
         
         self._draw_area = QLabel()

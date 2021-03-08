@@ -2,6 +2,7 @@
 <RCC version="1.0">
     <qresource prefix="icons">
         <file alias="app_icon">icons/blipblop_logo.icns</file>
+        <file alias="app_icon_png">icons/blipblop_logo.png</file>
         <file alias="blipblop_logo">icons/blipblop_logo.png</file>
         <file alias="visual_task">icons/visual_task.png</file>
         <file alias="visual_task_large">icons/visual_task_large.png</file>
