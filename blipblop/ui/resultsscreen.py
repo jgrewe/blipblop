@@ -11,10 +11,10 @@ from blipblop.util.results import MeasurementResults
 
 class ResultsScreen(QWidget):
     back_signal = pyqtSignal()
-    
+
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
-        
+
         self.table = QTableWidget()
         self._stack = QStackedLayout(self)
         label = QLabel("There are no results to show\n(press ESC to go back)")
@@ -27,27 +27,27 @@ class ResultsScreen(QWidget):
         self._stack.addWidget(label)         # 0
         self._stack.addWidget(self.table)    # 1
         self.setLayout(self._stack)
-        
+
         self._back_action = QAction("back")
         self._back_action.setShortcut(QKeySequence("escape"))
         self._back_action.triggered.connect(self.on_back)
-        
+
         self._copy_action = QAction("copy")
         self._copy_action.setShortcut(QKeySequence("ctrl+c"))
         self._copy_action.triggered.connect(self.copy_selection)
 
         self.addAction(self._back_action)
         self.addAction(self._copy_action)
-        
+
     def set_results(self, measurement_results):
         if len(measurement_results) == 0:
             return
-    
+
         for mr in measurement_results:
             if not isinstance(mr, MeasurementResults):
                 print("Some result entries are no MeasurementResults!")
-                return     
-        
+                return
+
         row_count = max([len(r.results) for r in measurement_results])
         col_count = len(measurement_results)
         self.table.setRowCount(row_count)
@@ -89,4 +89,3 @@ class ResultsScreen(QWidget):
     def reset(self):
         self.table.clear()
         self._stack.setCurrentIndex(0)
-

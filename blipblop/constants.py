@@ -12,7 +12,7 @@ while it.hasNext():
     name = it.next()
     if "sounds/" in name:
         SNDS_DICT[name.split("/")[-1]] = "qrc" + name
-
+print(SNDS_DICT)
 organization_name = "de.uni-tuebingen.neuroetho"
 application_name = "BlipBlop"
 application_version = 0.1
@@ -32,7 +32,8 @@ for icon in ICONS_PATHS:
 
 def get_sound(name):
     if name in SNDS_DICT.keys():
-        return QMediaContent(QUrl(SNDS_DICT[name]))
+        url = QUrl(SNDS_DICT[name])
+        return QMediaContent(url)
     else:
         print("Sound %s not found!" % name)
         return None
@@ -43,4 +44,3 @@ def get_icon(name):
         return QIcon(ICON_DICT[name])
     else:
         return QIcon("blipblop_logo.png")
-
