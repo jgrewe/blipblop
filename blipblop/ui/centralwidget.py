@@ -52,6 +52,7 @@ class CentralWidget(QWidget):
 
     def reset(self):
         self._task_results = []
+        self._results_screen.reset()
         self._stack.setCurrentIndex(0)
         
     def on_new_visual_task(self):

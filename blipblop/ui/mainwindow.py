@@ -24,17 +24,17 @@ class BlipBlop(QMainWindow):
         self.show()
     
     def create_actions(self):
-        self._quit_action = QAction(QIcon(":/icons/quit"), "Quit", self)
+        self._quit_action = QAction(QIcon(":/icons/quit"), "quit application", self)
         self._quit_action.setStatusTip("Quit BlipBlop")
         self._quit_action.setShortcut(QKeySequence("Ctrl+q"))
         self._quit_action.triggered.connect(self.on_quit)
 
-        self._new_action = QAction(QIcon(":/icons/new_session"), "New session", self)
+        self._new_action = QAction(QIcon(":/icons/new_session"), "new session", self)
         self._new_action.setStatusTip("Start a new session discarding previous results")
         self._new_action.setShortcut(QKeySequence("Ctrl+n"))
         self._new_action.triggered.connect(self.on_new)
 
-        self._results_action = QAction(QIcon(":/icons/results_table"), "Show results", self)
+        self._results_action = QAction(QIcon(":/icons/results_table"), "show results", self)
         self._results_action.setStatusTip("Show results as table")
         self._results_action.setShortcut(QKeySequence("Ctrl+r"))
         self._results_action.setEnabled(True)
@@ -51,13 +51,13 @@ class BlipBlop(QMainWindow):
         self._help_action.setEnabled(True)
         self._help_action.triggered.connect(self.on_help)
 
-        self._visual_task_action = QAction(QIcon(":/icons/visual_task"), "visual")
+        self._visual_task_action = QAction(QIcon(":/icons/visual_task"), "visual task")
         self._visual_task_action.setStatusTip("Start measuring visual reaction times")
         self._visual_task_action.setShortcut(QKeySequence("Ctrl+1"))
         self._visual_task_action.setEnabled(True)
         self._visual_task_action.triggered.connect(self.on_visual)
 
-        self._auditory_task_action = QAction(QIcon(":/icons/auditory_task"), "auditory")
+        self._auditory_task_action = QAction(QIcon(":/icons/auditory_task"), "auditory task")
         self._auditory_task_action.setStatusTip("Start measuring auditory reaction times")
         self._auditory_task_action.setShortcut(QKeySequence("Ctrl+2"))
         self._auditory_task_action.setEnabled(True) 
@@ -77,6 +77,7 @@ class BlipBlop(QMainWindow):
         self._toolbar.addAction(self._visual_task_action)
         self._toolbar.addAction(self._auditory_task_action)
         self._toolbar.addAction(self._results_action)
+        self._toolbar.addSeparator()
         self._toolbar.addAction(self._help_action)
         
         empty = QWidget()
