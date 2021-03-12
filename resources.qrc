@@ -18,11 +18,6 @@
         <file alias="results_table">icons/blipblop_table.png</file>
         <file alias="settings">icons/settings.png</file>
     </qresource>
-    <qresource prefix="sounds">
-        <file alias="bell">sounds/bell.wav</file>
-        <file alias="message">sounds/message.wav</file>
-        <file alias="complete">sounds/complete.wav</file>
-    </qresource>
     <qresource prefix="docs">
         <file alias="index">docs/index.md</file>
         <file alias="visual_task">docs/visual_task.md</file>
