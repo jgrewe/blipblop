@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import sys
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
@@ -15,6 +14,7 @@ except ImportError:
     pass
 
 def main():
+    print("executing main.main")
     app = QApplication(sys.argv)
     app.setApplicationName(cnst.application_name)
     app.setApplicationVersion(str(cnst.application_version))
@@ -33,12 +33,10 @@ def main():
     window.show()
     
     code = app.exec_()
+    print("Application exit!")
     pos = window.pos()
     settings.setValue("app/width", window.width())
     settings.setValue("app/height", window.height())
     settings.setValue("app/pos_x", pos.x())
     settings.setValue("app/pos_y", pos.y())
     sys.exit(code)
-    
-if __name__ == "__main__":
-    main()
