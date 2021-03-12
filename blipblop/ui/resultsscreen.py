@@ -1,11 +1,10 @@
 import io
 import csv
 from PyQt5 import QtWidgets
-from PyQt5.QtGui import QFont, QKeySequence
+from PyQt5.QtGui import QFont, QIcon, QKeySequence
 from PyQt5.QtWidgets import QAction, QLabel, QStackedLayout, QTableWidget, QTableWidgetItem, QWidget
 from PyQt5.QtCore import Qt, pyqtSignal
 
-import blipblop.constants as cnst
 from blipblop.util.results import MeasurementResults
 
 
@@ -54,7 +53,7 @@ class ResultsScreen(QWidget):
         self.table.setColumnCount(col_count)
 
         for col, mr in enumerate(measurement_results):
-            headerItem = QTableWidgetItem(cnst.get_icon("visual_task") if "visual" in mr.name.lower() else cnst.get_icon("auditory_task"), "")
+            headerItem = QTableWidgetItem(QIcon(":/icons/visual_task") if "visual" in mr.name.lower() else QIcon(":/icons/auditory_task"), "")
             headerItem.setToolTip("%s started at\n %s " % (mr.name, mr.starttime))
             self.table.setHorizontalHeaderItem(col, headerItem)
             for row, r in enumerate(mr.results):
