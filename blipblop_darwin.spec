@@ -16,6 +16,7 @@ a = Analysis(['blipblop_main.py'],
                     ('sounds/bell.wav', "sounds"),
                     ('sounds/complete.wav', "sounds"),
                     ('sounds/message.wav', "sounds"),
+                    ('icons/blipblop_logo.icns', "."),
                     ],
              hiddenimports=[],
              hookspath=[],
@@ -25,6 +26,7 @@ a = Analysis(['blipblop_main.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
@@ -35,13 +37,12 @@ exe = EXE(pyz,
           a.datas,
           [],
           name='BlipBlop',
-          debug=False,
+          debug=True,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False,
+          console=True,
           icon='icons/blipblop_logo.icns'
           )
-

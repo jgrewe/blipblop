@@ -35,7 +35,7 @@ jobs:
     - name: create package
       run: |
         pyrcc5 resources.qrc -o resources.py
-        pyinstaller --onefile --windowed --name="BlipBlop" blipblop_win.spec
+        pyinstaller blipblop_win.spec
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.2
