@@ -36,7 +36,7 @@ jobs:
     - name: create package
       run: |
         pyrcc5 resources.qrc -o resources.py
-        pyinstaller --onefile --windowed --osx-bundle-identifier="de.uni-tuebingen.neuroetho.blipblop" blipblop_dawin.spec
+        pyinstaller --onefile --windowed --osx-bundle-identifier="de.uni-tuebingen.neuroetho.blipblop" blipblop_darwin.spec
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.2
