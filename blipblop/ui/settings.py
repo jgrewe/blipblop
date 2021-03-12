@@ -112,7 +112,7 @@ class AuditoryTaskSettings(TaskSettings):
 
     def store_settings(self):
         super().store_settings()
-        self.settings.setValue("auditory_task/sound_index", self._sound_combo.currentIndex)
+        self.settings.setValue("auditory_task/sound_index", self._sound_combo.currentIndex())
 
     @property
     def sound(self):
