@@ -52,7 +52,7 @@ class HelpBrowser(QWidget):
     def __init__(self, parent=None) -> None:
         super().__init__(parent=parent)
         self.setLayout(QVBoxLayout())
-        # FIXME https://stackoverflow.com/a/43217828  about loading from esource files
+        # FIXME https://stackoverflow.com/a/43217828  about loading from resource files
         doc_url = QUrl.fromLocalFile(cnst.DOCS_ROOT_FILE)
         self._edit = QTextBrowser()
         self._edit.setOpenLinks(True)

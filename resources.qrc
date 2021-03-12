@@ -25,5 +25,8 @@
     </qresource>
     <qresource prefix="docs">
         <file alias="index">docs/index.md</file>
+        <file alias="visual_task">docs/visual_task.md</file>
+        <file alias="auditory_task">docs/auditory_task.md</file>
+        <file alias="license">docs/license.md</file>
     </qresource>
 </RCC>
