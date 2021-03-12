@@ -14,7 +14,6 @@ except ImportError:
     pass
 
 def main():
-    print("executing main.main")
     app = QApplication(sys.argv)
     app.setApplicationName(cnst.application_name)
     app.setApplicationVersion(str(cnst.application_version))
@@ -33,7 +32,6 @@ def main():
     window.show()
     
     code = app.exec_()
-    print("Application exit!")
     pos = window.pos()
     settings.setValue("app/width", window.width())
     settings.setValue("app/height", window.height())
