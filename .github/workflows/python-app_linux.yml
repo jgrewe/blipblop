@@ -12,14 +12,14 @@ on:
 jobs:
   build:
 
-    runs-on: macos-10.15
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+    - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.8
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -36,13 +36,13 @@ jobs:
     - name: create package
       run: |
         pyrcc5 resources.qrc -o resources.py
-        pyinstaller --onefile --windowed --osx-bundle-identifier="de.uni-tuebingen.neuroetho.blipblop" blipblop_dawin.py
+        pyinstaller blipblop_linux.py
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.2
       with:
         # Artifact name
-        name: BlipBlop-macOS
+        name: BlibBlop-linux
         # A file, directory or wildcard pattern that describes what to upload
         path: |
           dist
