@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFrame, QHBoxLayout
 from PyQt5.QtWidgets import QPushButton, QSizePolicy, QTextBrowser, QVBoxLayout, QWidget
-from PyQt5.QtCore import QSettings, QUrl
+from PyQt5.QtCore import QSettings, QUrl, Qt
 
 import blipblop.constants as cnst
 
@@ -30,7 +30,8 @@ class HelpDialog(QDialog):
         self.back_btn.clicked.connect(self.help._edit.backward)
         self.home_btn = QPushButton(QIcon(":/icons/docs_home"), "home")
         self.home_btn.clicked.connect(self.help._edit.home)
-        self.fwd_btn = QPushButton(QIcon(":/icons/docs_fwd"), "forward")
+        self.fwd_btn = QPushButton(QIcon(":/icons/docs_forward"), "forward")
+        self.fwd_btn.setLayoutDirection(Qt.RightToLeft)
         self.fwd_btn.setEnabled(False)
         self.fwd_btn.clicked.connect(self.help._edit.forward)
 
