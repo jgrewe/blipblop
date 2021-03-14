@@ -35,13 +35,13 @@ jobs:
     - name: create package
       run: |
         pyrcc5 resources.qrc -o resources.py
-        pyinstaller blipblop_win.spec
+        pyinstaller blipblop_win.spec -y
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.2
       with:
         # Artifact name
-        name: blipblop-binary
+        name: blipblop-windows
         # A file, directory or wildcard pattern that describes what to upload
         path: |
           dist
