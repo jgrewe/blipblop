@@ -64,13 +64,14 @@ class CentralWidget(QWidget):
         task_results.starttime = self._task_start
         task_results.results = self._visual_screen.results
         self._task_results.append(task_results)
-        self._visual_screen.reset
+        self._visual_screen.reset()
         self._stack.setCurrentIndex(0)
 
     def on_task_aborted(self):
         self._stack.setCurrentIndex(0)
 
     def on_new_auditory_task(self):
+        self._task_start = dt.datetime.now()
         self._stack.setCurrentIndex(2)
         
     def on_auditory_task_done(self):
@@ -78,7 +79,7 @@ class CentralWidget(QWidget):
         task_results.starttime = self._task_start
         task_results.results = self._auditory_screen.results
         self._task_results.append(task_results)
-        self._auditory_screen.reset
+        self._auditory_screen.reset()
         self._stack.setCurrentIndex(0)
 
     def on_show_results(self):
