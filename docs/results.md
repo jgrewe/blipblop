@@ -8,4 +8,4 @@ The data is given in seconds. **Invalid** trials (spacebar was pressed before th
 
 Select the data with the mouse and press (**ctrl+c** or **cmd+c**) to copy the selection to clipboard and paste it into your favorite spreadsheet tool for further analysis.
 
-[back](index.md)
+[BACK](index.md)

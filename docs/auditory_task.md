@@ -13,6 +13,7 @@ Once you press *enter* or *return* an experiment starts and automatically procee
 ## Settings
 
 Pressing the cogwheel in the top right corner allows you to change the settings of the experiment. You can do the changes you want and then close the settings screen by pushing the cogwheel button again.
+
 ![settings](images/auditory_settings.png)
 
 By default, when you open the tool the first time, 5 trials recorded, and the stimulus will appear at a random time in the interval between *minimum delay* and *maximum delay* after start of a trial. Before the first and between trials a countdown appears. The *pause* can be adjusted and, as the other settings is given in seconds.
@@ -20,4 +21,4 @@ The *stimulus saliency* slider controls the loudness of the sound. Of course thi
 
 All changes will be stored and are persisted even after the program is closed.
 
-[back](index.md)
+[BACK](index.md)

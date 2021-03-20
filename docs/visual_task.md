@@ -22,4 +22,4 @@ The visual stimulus is always a red dot appearing centered at the fixation cross
 
 All changes will be stored and are persisted even after the program is closed.
 
-[back](index.md)
+[BACK](index.md)

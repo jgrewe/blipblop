@@ -10,7 +10,7 @@ Auditory stimuli have been taken from the [freedesktop](https://freedesktop.org)
 
 ![main screen](images/blipblop_main.png)
 
-By pressing one of the big icons in the center of the screen you can start an experiment of measuring the [visual](visual_taks.md) or [auditory](auditory_task.md) reaction times. These functions are also available via the **Tasks** menu on top or the buttons in the tool bar (left). Once an experiment has been successfully performed the results can be viewed using the [results screen](results.md) (table icon on the left, or entry in the **Tasks** menu).
+By pressing one of the big icons in the center of the screen you can start an experiment of measuring the [visual](visual_task.md) or [auditory](auditory_task.md) reaction times. These functions are also available via the **Tasks** menu on top or the buttons in the tool bar (left). Once an experiment has been successfully performed the results can be viewed using the [results screen](results.md) (table icon on the left, or entry in the **Tasks** menu).
 You can make several experiments and all results will be stored unless you start a new session (top button in the tool bar or *new session* entry in the **Tasks** menu) or end the program.
 
 The basic handling is very simple:
