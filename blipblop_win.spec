@@ -32,27 +32,21 @@ a = Analysis(['blipblop_main.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
 exe = EXE(pyz,
           a.scripts,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           [],
-          exclude_binaries=True,
           name='BlipBlop',
           debug=True,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True,
-          icon='icons/blipblop_logo.ico'
-          )
-
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=True,
-               upx_exclude=[],
-               name='BlipBlop')
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=True , icon='icons\\blipblop_logo.ico')
