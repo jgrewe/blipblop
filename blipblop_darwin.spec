@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['blipblop_main.py'],
-             pathex=['.'],
+             pathex=['/Users/jan/projects/programming/blipblop'],
              binaries=[],
              datas=[('docs/index.md', "docs"), 
                     ('docs/visual_task.md', "docs"), 
@@ -38,21 +38,25 @@ pyz = PYZ(a.pure, a.zipped_data,
 
 exe = EXE(pyz,
           a.scripts,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           [],
           name='BlipBlop',
           debug=True,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True,
-          icon='icons/blipblop_logo.icns'
-          )
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=False , icon='icons/blipblop_logo.icns')
 
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=True,
-               upx_exclude=[],
-               name='BlipBlop')
+app = BUNDLE(exe,
+            name='BlipBlop.app',
+            icon='icons/blipblop_logo.icns',
+            bundle_identifier='de.uni-tuebingen.neuroetho.blipblop',
+            info_plist={
+                'NSPrincipalClass': 'NSApplication',
+                'NSAppleScriptEnabled': False,
+            },
+)
