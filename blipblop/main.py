@@ -18,7 +18,7 @@ def main():
     app.setApplicationName(cnst.application_name)
     app.setApplicationVersion(str(cnst.application_version))
     app.setOrganizationDomain(cnst.organization_name)
-    app.setWindowIcon(QIcon(":/icons/app_icon_png"))
+    # app.setWindowIcon(QIcon(":/icons/app_icon_png"))
     settings = QSettings()
     width = int(settings.value("app/width", 1024))
     height = int(settings.value("app/height", 768))

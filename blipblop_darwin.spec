@@ -55,6 +55,7 @@ app = BUNDLE(exe,
             name='BlipBlop.app',
             icon='icons/blipblop_logo.icns',
             bundle_identifier='de.uni-tuebingen.neuroetho.blipblop',
+            version="0.1.0",
             info_plist={
                 'NSPrincipalClass': 'NSApplication',
                 'NSAppleScriptEnabled': False,
