@@ -1,24 +1,24 @@
 import sys
+import platform
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QSettings
 from blipblop.ui.mainwindow import BlipBlop
 import blipblop.constants as cnst
 
-try:
-    # Include in try/except block if you're also targeting Mac/Linux
+if platform.system() == "Windows":
     from PyQt5.QtWinExtras import QtWin
     myappid = "%s.%s" %(cnst.organization_name, cnst.application_version)
     QtWin.setCurrentProcessExplicitAppUserModelID(myappid)
-except ImportError:
-    pass
+
 
 def main():
     app = QApplication(sys.argv)
     app.setApplicationName(cnst.application_name)
     app.setApplicationVersion(str(cnst.application_version))
     app.setOrganizationDomain(cnst.organization_name)
-    # app.setWindowIcon(QIcon(":/icons/app_icon_png"))
+    if platform.system() == 'Linux':
+        app.setWindowIcon(QIcon(":/icons/app_icon_png"))
     settings = QSettings()
     width = int(settings.value("app/width", 1024))
     height = int(settings.value("app/height", 768))
